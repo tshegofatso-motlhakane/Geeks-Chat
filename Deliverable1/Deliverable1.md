@@ -35,5 +35,18 @@
 
      4.Profile
 ![Authentication](UsecaseDiagrams/Profile.drawio.svg)
+
+## Activity Diagrams
+     1.Authentication
+![Authentication](ActivityDiagrams/Authentication.drawio.svg)
+
+     2.Chat
+![Chat](ActivityDiagrams/Chat.drawio.svg)
+
+     3.Contact-Managment
+![Contact-Managment](ActivityDiagrams/Contact-managment.drawio.svg)
+
+     4.Profile
+![Authentication](ActivityDiagrams/Profile.drawio.svg)
    
             
