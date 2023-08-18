@@ -26,10 +26,13 @@
 ## Use-Case Diagrams
      1.Authentication
 ![Authentication](UsecaseDiagrams/Authentication.drawio.svg)
+
      2.Chat
 ![Chat](UsecaseDiagrams/Chat.drawio.svg)
+
      3.Contact-Managment
 ![Contact-Managment](UsecaseDiagrams/Contact-managment.drawio.svg)
+
      4.Profile
 ![Authentication](UsecaseDiagrams/Profile.drawio.svg)
    
