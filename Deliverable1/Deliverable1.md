@@ -38,7 +38,7 @@
 
 ## Activity Diagrams
      1.Authentication
-![Authentication](ActivityDiagrams/Authentication.drawio.svg)
+![Authentication](ActivityDiagrams/authentication.drawio.svg)
 
      2.Chat
 ![Chat](ActivityDiagrams/Chat.drawio.svg)
