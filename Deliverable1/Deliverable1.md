@@ -25,7 +25,7 @@
 
 ## Use-Case Diagrams
      1.Authentication
-![Authentication](Deliverable1/UsecaseDiagrams/Authentication.drawio.svg)
+![Authentication](UsecaseDiagrams/Authentication.drawio.svg)
 
    
             
