@@ -30,10 +30,7 @@
      2.Chat
 ![Chat](UsecaseDiagrams/Chat.drawio.svg)
 
-     3.Contact-Managment
-![Contact-Managment](UsecaseDiagrams/Contact-managment.drawio.svg)
-
-     4.Profile
+     3.Profile
 ![Authentication](UsecaseDiagrams/Profile.drawio.svg)
 
 ## Activity Diagrams
