@@ -43,10 +43,7 @@
      2.Chat
 ![Chat](ActivityDiagrams/Chat.drawio.svg)
 
-     3.Contact-Managment
-![Contact-Managment](ActivityDiagrams/Contact-managment.drawio.svg)
-
-     4.Profile
+     3.Profile
 ![Authentication](ActivityDiagrams/Profile.drawio.svg)
    
             
