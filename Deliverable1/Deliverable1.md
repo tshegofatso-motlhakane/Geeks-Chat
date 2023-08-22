@@ -42,5 +42,9 @@
 
      3.Profile
 ![Authentication](ActivityDiagrams/Profile.drawio.svg)
-   
+
+## Class Diagrams
+
+![ClassDiagram](ClassDiagram/ClassDiagram.drawio.svg)
+
             
