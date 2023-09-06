@@ -20,12 +20,31 @@
       1. System must always be available to Geeks
       2. The system must have low latency
       3. System must be secure and only give authority to the right user
-      4. System must be user friendly
+      4. System must be user friendly 
       5. System must be compatible with different devices
 
 ## Use-Case Diagrams
      1.Authentication
-     ![Authentication.drawio.svg](Usecase Diagrams/Authentication.drawio.svg)
+![Authentication](UsecaseDiagrams/Authentication.drawio.svg)
 
-   
+     2.Chat
+![Chat](UsecaseDiagrams/Chat.drawio.svg)
+
+     3.Profile
+![Authentication](UsecaseDiagrams/Profile.drawio.svg)
+
+## Activity Diagrams
+     1.Authentication
+![Authentication](ActivityDiagrams/authentication.drawio.svg)
+
+     2.Chat
+![Chat](ActivityDiagrams/Chat.drawio.svg)
+
+     3.Profile
+![Authentication](ActivityDiagrams/Profile.drawio.svg)
+
+## Class Diagrams
+
+![ClassDiagram](ClassDiagram/ClassDiagram.drawio.svg)
+
             
