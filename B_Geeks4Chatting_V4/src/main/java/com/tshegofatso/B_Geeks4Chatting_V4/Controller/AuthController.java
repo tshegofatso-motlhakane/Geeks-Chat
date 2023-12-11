@@ -50,8 +50,6 @@ public class AuthController {
         System.out.println("login starting");
         try {
             UserResponse user = authService.loginUser(userRequest);
-
-
             return ResponseEntity.ok(user);
         } catch (UsernameNotFoundException | BadCredentialsException ex) {
             // Handle invalid credentials or user

@@ -33,7 +33,6 @@ public class MessageController {
     @MessageMapping("/api/chat/{conversationId}")
     public void sendMessage(@DestinationVariable String conversationId, Message message) {
         // Save the message to the database
-        System.out.println("fuck yaaaah is seding");
         message.setTimestamp(LocalDateTime.now());
         message.setConversationId(conversationId);
         messageRepository.save(message);
@@ -75,7 +74,6 @@ public class MessageController {
     @GetMapping("api/messages/{conversationId}")
     public List<Message> getMessages(@PathVariable String conversationId) {
         // Retrieve messages for the specified conversation from the database
-        System.out.println("gett the tings");
         return messageRepository.findByConversationId(conversationId);
     }
 
