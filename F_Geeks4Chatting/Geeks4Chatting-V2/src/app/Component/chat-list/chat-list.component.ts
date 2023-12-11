@@ -19,7 +19,7 @@ import { tap } from 'rxjs';
 })
 export class ChatListComponent implements OnInit  {
   messagelist: MessageList[] = [];
-  names2: User[] = [];
+  Users: User[] = [];
   CurrentUser : String ="";
   searchUsername: string = '';
   filteredMessagelist: MessageList[] = [];
@@ -36,7 +36,7 @@ export class ChatListComponent implements OnInit  {
  
   ngOnInit(): void {
     this.fetchContacts();
-    this.names2 = this.contactService.contacts;
+    this.Users = this.contactService.contacts;
     this.messageService.messageList$.subscribe(newList => {
       this.messagelist = newList;
       this.filteredMessagelist = this.messagelist;
@@ -69,8 +69,8 @@ export class ChatListComponent implements OnInit  {
     const userId : number = this.contactService.getCurrentUser(); // Get the actual user ID
     this.contactService.fetchContacts2(userId).subscribe(
       (fetchedContacts: User[]) => {
-        this.names2 = fetchedContacts;
-        this.messageService.updateList(this.names2);
+        this.Users = fetchedContacts;
+        this.messageService.updateList(this.Users);
       },
       (error: any) => {
         // Handle error if needed
@@ -82,14 +82,14 @@ export class ChatListComponent implements OnInit  {
 
   getContacts() {
 
-    this.names2 = this.contactService.contacts;
+    this.Users = this.contactService.contacts;
   }
  
   selectUser(selectedUser: MessageList) {
     console.log("selected " + selectedUser.username);
   
     // Find the user in the names2 array based on the user ID
-    const selected = this.names2.find(user => user.userid === selectedUser.userid);
+    const selected = this.Users.find(user => user.userid === selectedUser.userid);
   
     if (selected !== undefined) {
       // Set the selected user in the chatService
