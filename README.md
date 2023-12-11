@@ -34,8 +34,7 @@ We welcome contributions! Please follow our [contribution guidelines](CONTRIBUTI
 
 ## Credits
 
-- Project Lead: [Your Name]
-- Contributors: [List of contributors]
+- Project Lead: Tshegofatso Motlhakane
 
 ## License
 
