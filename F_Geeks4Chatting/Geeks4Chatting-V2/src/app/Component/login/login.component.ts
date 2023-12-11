@@ -26,7 +26,6 @@ export class LoginComponent {
       this.authService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe({
         next: (response) => {
           // Handle successful login, 'response' will contain user details
-          console.log(response);
           if (response != null) {
   
             console.log('Login successful', response);
@@ -35,8 +34,7 @@ export class LoginComponent {
           } else {
              console.log('user not found', response);
              this.loginfail =true;
-            // this.contactService.fetchInitialContacts();
-            this.router.navigate(['/login']);
+             this.router.navigate(['/login']);
           }
   
         },

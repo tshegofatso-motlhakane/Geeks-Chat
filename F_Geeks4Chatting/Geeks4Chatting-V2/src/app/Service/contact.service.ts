@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, CreateContact, User } from '../Model/user.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +18,6 @@ export class ContactService {
   
   constructor(private http : HttpClient) { 
    
-  }
-
-  fetchContacts(userId: number): Observable<User[]> {
-    const url = `${this.baseUrl}/get/${userId}/all`;
-    return this.http.get<User[]>(url).pipe(
-      tap((initialContacts: User[]) => {
-        // Update the contacts subject after successful fetch
-        this.contactsSubject.next(initialContacts);
-      }),
-      catchError((error: any) => {
-        console.error('Error fetching contacts:', error);
-        return throwError(error); // Rethrow the error for handling in the caller
-      })
-    );
   }
 
   fetchContacts2(userId: number): Observable<User[]> {
@@ -53,6 +40,7 @@ export class ContactService {
     this.http.post<User[]>(addContactUrl, newContact).subscribe(
       (updatedContacts: User[]) => {
         this.contacts = updatedContacts;
+      //  this.messageService.updateList(this.contacts);
   
         const newContact: User = this.contacts[this.contacts.length - 1];
         console.log("New list:", this.contacts);
@@ -76,10 +64,7 @@ export class ContactService {
     return 0; // or any other default value if user is not found
   }
 
-  getConversatioIds() {
 
-   const theList = this.fetchContacts(this.getCurrentUser());
-  }
 
   getContacts(searchTerm: string): Observable<User[]> {
     const params = new HttpParams().set('searchTerm', searchTerm);

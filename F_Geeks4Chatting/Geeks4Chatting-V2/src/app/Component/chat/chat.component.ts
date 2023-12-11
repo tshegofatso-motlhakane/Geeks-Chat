@@ -13,7 +13,7 @@ export class ChatComponent implements OnInit  {
 
    
     private user : number = this.contactService.getCurrentUser()
-   constructor(private websocketService : WebSocketService,
+    constructor(private websocketService : WebSocketService,
      private contactService : ContactService,
      private messageService : MessageService) {
 
