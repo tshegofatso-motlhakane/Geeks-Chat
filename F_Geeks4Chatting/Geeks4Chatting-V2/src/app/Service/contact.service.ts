@@ -20,7 +20,7 @@ export class ContactService {
    
   }
 
-  fetchContacts2(userId: number): Observable<User[]> {
+  fetchContacts(userId: number): Observable<User[]> {
     const url = `${this.baseUrl}/get/${userId}/all`;
     return this.http.get<User[]>(url).pipe(
       tap((fetchedContacts: User[]) => {

@@ -67,7 +67,7 @@ export class ChatListComponent implements OnInit  {
   
   fetchContacts(): void {
     const userId : number = this.contactService.getCurrentUser(); // Get the actual user ID
-    this.contactService.fetchContacts2(userId).subscribe(
+    this.contactService.fetchContacts(userId).subscribe(
       (fetchedContacts: User[]) => {
         this.Users = fetchedContacts;
         this.messageService.updateList(this.Users);
