@@ -43,10 +43,13 @@ private websocketService : WebSocketService){}
         user1: currentUser.userid,
         user2: contactid,
       };
-      this.searchResults.splice(contactid, 1);
+
+      const index = this.searchResults.findIndex(user => user.userid === contactid);
+      this.searchResults.splice(index, 1);
 
       // Update this.searchResults by removing the contact
         console.log(this.searchResults)
+        this.searchResults = this.searchResults;
 
       this.contactService.addNewContactToList(newContact);
       const conv = this.contactService.getconversationid(newContact.user2);

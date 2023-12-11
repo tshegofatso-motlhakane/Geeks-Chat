@@ -37,7 +37,7 @@ export class ChatListComponent implements OnInit  {
   ngOnInit(): void {
     this.fetchContacts();
     this.Users = this.contactService.contacts;
-    this.messageService.messageList$.subscribe(newList => {
+    this.contactService.messageList$.subscribe(newList => {
       this.messagelist = newList;
       this.filteredMessagelist = this.messagelist;
 
@@ -70,7 +70,7 @@ export class ChatListComponent implements OnInit  {
     this.contactService.fetchContacts(userId).subscribe(
       (fetchedContacts: User[]) => {
         this.Users = fetchedContacts;
-        this.messageService.updateList(this.Users);
+     //   this.messageService.updateList(this.Users);
       },
       (error: any) => {
         // Handle error if needed
@@ -147,7 +147,7 @@ export class ChatListComponent implements OnInit  {
       localStorage.clear();
       this.messageService.clearMessages();
       this.contactService.contacts = [];
-      this.contactService.clearContactList();
+    //  this.contactService.clearContactList();
       this.router.navigate(['/login']);
     } else {
       console.log("failed to log out");

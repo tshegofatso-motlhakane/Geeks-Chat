@@ -12,13 +12,12 @@ export class MessageService {
 
   private conversations: { [key: string]: BehaviorSubject<Message[]> } = {};
 
-  private messageListSubject = new BehaviorSubject<MessageList[]>([]);
-  messageList$ = this.messageListSubject.asObservable();
+  
 
   private baseUrl = 'http://localhost:8080/api/messages';
  
 
-  constructor(private http : HttpClient, private contactService : ContactService ) {
+  constructor(private http : HttpClient ) {
 
 
   }
@@ -30,23 +29,23 @@ export class MessageService {
     return this.conversations[conversationId].asObservable();
   }
 
-  updateLatestMessageForUser(userId: number, updatedMessage: Message) {
-    const currentList = this.messageListSubject.getValue();
-    console.log('Current List:', currentList);
+  // updateLatestMessageForUser(userId: number, updatedMessage: Message) {
+  //   const currentList = this.messageListSubject.getValue();
+  //   console.log('Current List:', currentList);
   
-    const updatedList = currentList.map(message => {
-      if (message.userid === userId) {
-        console.log('Updating Message:', message);
-        message.lastestText = updatedMessage.content;
-        message.timestamp = updatedMessage.timestamp;
-      }
-      return message;
-    });
+  //   const updatedList = currentList.map(message => {
+  //     if (message.userid === userId) {
+  //       console.log('Updating Message:', message);
+  //       message.lastestText = updatedMessage.content;
+  //       message.timestamp = updatedMessage.timestamp;
+  //     }
+  //     return message;
+  //   });
   
-    console.log('Updated List:', updatedList);
+  //   console.log('Updated List:', updatedList);
   
-    this.messageListSubject.next(updatedList);
-  }
+  //   this.messageListSubject.next(updatedList);
+  // }
   
   addMessage(conversationId: string, message: Message): void {
     if (!this.conversations[conversationId]) {
@@ -54,7 +53,7 @@ export class MessageService {
     }
     
     const [user1, user2] = conversationId.split('_').map(Number);
-    this.updateLatestMessageForUser(user2,message);
+   // this.updateLatestMessageForUser(user2,message);
     const currentMessages = this.conversations[conversationId].getValue();
     const updatedMessages = [...currentMessages, message];
     this.conversations[conversationId].next(updatedMessages);
@@ -128,27 +127,7 @@ getLastMessageText(conversationId: string): Message {
   // Or any default value
 }
 
-updateList(names2: User[]): void {
-  const updatedMessageList: MessageList[] = names2.map(user => {
-    const conversationId = this.contactService.getconversationid(user.userid);
-    const lastMessageText = this.getLastMessageText(conversationId);
-    let unread: number = 0;
-    this.getReceivedMessagesCount(conversationId).subscribe(unreadCount => {
-      unread = unreadCount;
-    });
 
-    return {
-      userid: user.userid,
-      username: user.username,
-      lastestText: lastMessageText.content,
-      timestamp: lastMessageText.timestamp, // You may want to set the actual timestamp
-      unread: unread
-    };
-  });
-
-  // Update the BehaviorSubject with the new value
-  this.messageListSubject.next(updatedMessageList);
-}
 
 getReceivedMessagesCount(conversationId: string): Observable<number> {
   return this.getMessagesForConversation(conversationId).pipe(

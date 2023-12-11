@@ -51,9 +51,19 @@ export class ChatThreadComponent implements OnInit {
       timestamp: new Date(),
       status : MessageStatus.Sent
     };
-
+    const [user1,user2] = this.conversationId.split('_').map(Number);
+   
     // send message through websocket
     this.websocketService.sendMessage(message);
+    if(user1 === this.currentUser)
+    {
+      console.log("Update message 1" );
+      this.contactService.updateLatestMessageForUser(user2,message);
+    }else
+    {
+      console.log("Update message 1" );
+      this.contactService.updateLatestMessageForUser(user1,message);
+    }
   
     console.log("sending mess" );
     // Clear the input field after sending the message

@@ -82,6 +82,7 @@ export class WebSocketService {
         console.log('Received message:', parsedMessage);
         parsedMessage.status = MessageStatus.Received;
         this.updateMessageStatus(parsedMessage.messageid);
+        this.callupdate(conversationId,parsedMessage);
         this.messageService.addMessage(conversationId, parsedMessage);
       });
     });
@@ -96,8 +97,23 @@ export class WebSocketService {
       console.log('Received message:', parsedMessage);
       parsedMessage.status = MessageStatus.Received;
       this.messageService.addMessage(conversationId, parsedMessage);
+      this.callupdate(conversationId,parsedMessage);
     });
   
+  }
+
+  callupdate(conversation : string , message : Message){
+    const [user1,user2] = conversation.split('_').map(Number);
+
+    if(user1 === this.contactService.getCurrentUser())
+    {
+      console.log("Update message 1" );
+      this.contactService.updateLatestMessageForUser(user2,message);
+    }else
+    {
+      console.log("Update message 1" );
+      this.contactService.updateLatestMessageForUser(user1,message);
+    }
   }
   
 }

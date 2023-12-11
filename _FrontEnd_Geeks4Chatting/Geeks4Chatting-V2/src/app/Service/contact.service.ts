@@ -4,6 +4,7 @@ import { Contact, CreateContact, User } from '../Model/user.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { MessageService } from './message.service';
+import { Message, MessageList } from '../Model/message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,13 @@ import { MessageService } from './message.service';
 export class ContactService {
 
   private baseUrl = 'http://localhost:8080/api/contact'
-  private contactsSubject = new BehaviorSubject<User[]>([]);
-  contacts$ = this.contactsSubject.asObservable();
 
-   contacts : User[] = [];
+  private messageListSubject = new BehaviorSubject<MessageList[]>([]);
+  messageList$ = this.messageListSubject.asObservable();
+
+  contacts : User[] = [];
   
-  constructor(private http : HttpClient) { 
+  constructor(private http : HttpClient , private messageService : MessageService) { 
    
   }
 
@@ -26,12 +28,53 @@ export class ContactService {
       tap((fetchedContacts: User[]) => {
         console.log("Fetched Contacts:"+this.contacts);
         this.contacts = [...fetchedContacts]; // Use spread operator to create a new list
+        this.updateList();
       }),
       catchError((error: any) => {
         console.error('Error fetching contacts:', error);
         throw error;
       })
     );
+  }
+
+  
+  updateLatestMessageForUser(userId: number, updatedMessage: Message) {
+    const currentList = this.messageListSubject.getValue();
+    console.log('Current List:', currentList);
+  
+    const updatedList = currentList.map(message => {
+      if (message.userid === userId) {
+        console.log('Updating Message:', message);
+        message.lastestText = updatedMessage.content;
+        message.timestamp = updatedMessage.timestamp;
+      }
+      return message;
+    });
+  
+    console.log('Updated List:', updatedList);
+    this.messageListSubject.next(updatedList);
+  }
+
+  updateList(): void {
+      const updatedMessageList: MessageList[] = this.contacts.map(user => {
+      const conversationId = this.getconversationid(user.userid);
+      const lastMessageText = this.messageService.getLastMessageText(conversationId);
+      let unread: number = 0;
+      this.messageService.getReceivedMessagesCount(conversationId).subscribe(unreadCount => {
+        unread = unreadCount;
+      });
+  
+      return {
+        userid: user.userid,
+        username: user.username,
+        lastestText: lastMessageText.content,
+        timestamp: lastMessageText.timestamp, // You may want to set the actual timestamp
+        unread: unread
+      };
+    });
+  
+    // Update the BehaviorSubject with the new value
+    this.messageListSubject.next(updatedMessageList);
   }
 
   addNewContactToList(newContact: CreateContact): void {
@@ -44,6 +87,7 @@ export class ContactService {
   
         const newContact: User = this.contacts[this.contacts.length - 1];
         console.log("New list:", this.contacts);
+        this.updateList();
       },
       (error) => {
         console.error('Error adding contact:', error);
@@ -71,11 +115,6 @@ export class ContactService {
     const userId = this.getCurrentUser();
     const url = `${this.baseUrl}/${userId}/search`;
     return this.http.get<User[]>(url, { params });
-  }
-
-
-  clearContactList() {
-    this.contactsSubject.next([]);
   }
 
   getconversationid( receiver: number): string{
