@@ -41,12 +41,18 @@ export class ContactService {
   updateLatestMessageForUser(userId: number, updatedMessage: Message) {
     const currentList = this.messageListSubject.getValue();
     console.log('Current List:', currentList);
+      let unread: number = 0;
+      let conv = this.getconversationid(userId);
+      this.messageService.getReceivedMessagesCount(conv).subscribe(unreadCount => {
+        unread = unreadCount;
+      });
   
     const updatedList = currentList.map(message => {
       if (message.userid === userId) {
         console.log('Updating Message:', message);
         message.lastestText = updatedMessage.content;
         message.timestamp = updatedMessage.timestamp;
+        message.unread = unread;
       }
       return message;
     });
