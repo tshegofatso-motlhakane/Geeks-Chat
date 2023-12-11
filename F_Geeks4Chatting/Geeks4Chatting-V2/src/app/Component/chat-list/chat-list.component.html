@@ -1,0 +1,40 @@
+<body>
+  <div class="side-nav">
+    <div class="side-nav-top">
+      <button class="footer-button" (click)="openProfileDialog()"></button>
+      <button class="footer-button" (click)="openAddContactDialog()"><mat-icon>person_add</mat-icon></button>
+    </div>
+  
+    <!-- Add a spacer to push bottom buttons to the end -->
+    <div class="spacer"></div>
+  
+    <div class="side-nav-bottom">
+      <button class="footer-button" (click)="logout()"><mat-icon>exit_to_app</mat-icon></button>
+    </div>
+  </div>
+  
+<section class="contact-list">
+    <div class="heading">
+       <h3>Chats</h3>
+       <p>{{ CurrentUser }}</p>
+    </div>
+  
+    <div class="contact-list-search">
+      <input type="text" class="search" id="search_username" name="username" [(ngModel)]="searchUsername" (input)="onSearchChange()" placeholder="search contact...">
+    </div>
+  
+    <div class="contact-list-container">
+      <div class="contact-list-chats" *ngFor="let contact of filteredMessagelist" (click)="selectUser(contact)">
+        <div class="contact-box" [class.selected]="contact.userid === chatService.selectedUser?.userid">
+          <div class="contact-avatar"></div>
+          <div class="contact-info">
+            <div class="contact-name">{{ contact.username }}</div>
+            <div class="contact-message-preview">{{ contact.lastestText }}</div>
+          </div>
+          <div class="unread" *ngIf="contact.unread > 0"><p>{{contact.unread}}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>

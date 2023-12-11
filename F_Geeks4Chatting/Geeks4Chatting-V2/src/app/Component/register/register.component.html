@@ -1,0 +1,39 @@
+<body>
+    <div class="content">
+        <div class="text">
+            Register
+        </div>
+        <form action="javascript:void(0)" [formGroup]="form">
+            <div class="field">
+                <input type="text" formControlName="username" placeholder="Username">
+                <span class="icons"><mat-icon>person</mat-icon></span>
+                <label>Email</label>
+            </div>
+            <div class="field">
+                <input type="text" formControlName="email" placeholder="Email">
+                <span class="icons"><mat-icon>email</mat-icon></span>
+                <label>Email</label>
+            </div>
+            <div class="field">
+                <input type="password" formControlName="password" placeholder="Password">
+                <span class="icons"><mat-icon>home</mat-icon></span>
+                <label>Password</label>
+            </div>
+            <div class="field">
+                <input type="password" formControlName="confirmPassword" placeholder="Confirm Password"
+                    name="confirmPassword">
+                <span class="icons"><mat-icon>lock</mat-icon></span>
+                <label>Confirm Password</label>
+            </div>
+            <div *ngIf="form?.errors?.['mismatch'] && form?.touched" class="password-match">
+                Password must match
+            </div>
+
+            <button (click)="register()">Sign up</button>
+            <div class="sign-up">
+                Have an account?
+                <a href="/login" (click)="login()">Log in</a>
+            </div>
+        </form>
+    </div>
+</body>

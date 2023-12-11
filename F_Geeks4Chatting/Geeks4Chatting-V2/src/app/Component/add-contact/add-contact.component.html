@@ -1,0 +1,26 @@
+<div class="add-contacts-dialog">
+    <div class="contact-list-search">
+        <input [(ngModel)]="searchTerm" type="text" class="search" id="search_username" name="username"
+            placeholder="search contact...">
+        <button class="search-icon" (click)="searchUsers()"><mat-icon>search</mat-icon></button>
+    </div>
+   
+    <div class="found-contacts" *ngIf="searchResults && searchResults.length > 0">
+        <div class="contact" *ngFor="let user of searchResults">
+            <div class="avatar"></div>
+            <div class="info">
+                <div class="username">{{ user.username }}</div>
+                <div class="description">Web Developer</div>
+            </div>
+            <button class="add" (click)="addContact(user.userid)" ><mat-icon>add_circle_outline</mat-icon></button>
+        </div>
+    </div>
+    <div *ngIf="showEmptyMessage">
+        <p>No users found.</p>
+      </div>
+    <div *ngIf="error">
+        <p>Error: {{ error.message }}</p>
+    </div>
+
+</div>
+

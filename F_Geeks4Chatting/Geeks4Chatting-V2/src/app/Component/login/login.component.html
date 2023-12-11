@@ -1,0 +1,32 @@
+<body>
+    <div class="content">
+        <div class="text">
+           Log In
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+           <div class="field">
+              <input type="text" formControlName="username" placeholder="Username">
+              <span class="icons"><mat-icon >email</mat-icon></span>
+              <label>Email</label>
+           </div>
+           <div class="field">
+              <input type="password" formControlName="password" placeholder="Password">
+              <span class="icons"><mat-icon>lock</mat-icon></span>
+              <label>Password</label>
+           </div>
+           <div class="forgot-pass">
+              <a href="#">Forgot Password?</a>
+           </div>
+           <p *ngIf="loginfail" class="invalid-login">invalid username or password!</p>
+           <button type="submit">Sign in</button>
+           
+           <div class="sign-up">
+              Not a member?
+              <a routerLink="#" (click)="register()">signup now</a>
+           </div>
+          
+        </form>
+        
+     </div>
+     
+</body>
