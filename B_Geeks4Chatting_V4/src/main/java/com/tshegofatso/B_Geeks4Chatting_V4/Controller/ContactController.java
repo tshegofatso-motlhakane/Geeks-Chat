@@ -42,14 +42,13 @@ public class ContactController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addContact(@RequestBody Contact contact){
-        System.out.println("adding contact");
+
         try{
 
             contactRepository.save(contact);
             List<User> contacts = userRepository.findContactsForUser(contact.getUser1());
             if(!contacts.isEmpty())
             {
-                System.out.println("setting password to null");
                 for (User u : contacts) {
                     u.setPassword("");
 
@@ -70,7 +69,6 @@ public class ContactController {
     public ResponseEntity<?> getallContacts(@PathVariable int userid){
 
         try{
-            System.out.println("making request");
          List<User> contacts = userRepository.findContactsForUser(userid);
          if(!contacts.isEmpty())
          {
@@ -101,7 +99,6 @@ public class ContactController {
             if(!contacts.isEmpty())
             {
                List<String> conversations = this.getConvId(contacts,userid);
-                System.out.println("sending convesations");
                 return ResponseEntity.ok(conversations);
             }
 
