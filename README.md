@@ -20,7 +20,7 @@ Geeks4Chatting is a workplace communication system designed to enhance communica
 
 1. Clone the repository.
 2. Set up the Angular frontend by navigating to the `frontend` directory and running `npm install`.
-3. Set up the Spring Boot backend by navigating to the `backend` directory and following the installation instructions.
+3. Set up the Spring Boot backend by navigating to the `backend` directory and following the installation instructions and download JDK 11 +
 
 ## Usage
 
@@ -30,15 +30,12 @@ Geeks4Chatting is a workplace communication system designed to enhance communica
 
 ## Contributing
 
-We welcome contributions! Please follow our [contribution guidelines](CONTRIBUTING.md).
+We welcome contributions!
 
 ## Credits
 
 - Project Lead: Tshegofatso Motlhakane
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 
