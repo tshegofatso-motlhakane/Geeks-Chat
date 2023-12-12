@@ -14,7 +14,6 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
   styleUrls: ['./chat-thread.component.scss']
 })
 export class ChatThreadComponent implements OnInit {
-  selectedUser: User | null = null;
   currentUser = this.contactService.getCurrentUser();
   messages: Message[] = [];
    conversationId: string = "";

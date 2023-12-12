@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  {path :'chat', component : ChatComponent },
+  {path :'chat', component : ChatComponent ,canActivate: [authGuard]},
   { path: 'chat/:conversationId', component: ChatComponent , canActivate: [authGuard]},
   
 ];
