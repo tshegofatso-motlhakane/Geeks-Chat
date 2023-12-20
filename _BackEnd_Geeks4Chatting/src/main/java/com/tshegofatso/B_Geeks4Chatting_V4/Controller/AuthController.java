@@ -1,6 +1,7 @@
 package com.tshegofatso.B_Geeks4Chatting_V4.Controller;
 
 import com.tshegofatso.B_Geeks4Chatting_V4.Helper.PasswordHelper;
+import com.tshegofatso.B_Geeks4Chatting_V4.Model.ResponseObject;
 import com.tshegofatso.B_Geeks4Chatting_V4.Model.User;
 import com.tshegofatso.B_Geeks4Chatting_V4.Model.LoginRequest;
 import com.tshegofatso.B_Geeks4Chatting_V4.Model.LoginResponse;
@@ -27,33 +28,31 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User newUser){
+    public ResponseObject<?> register(@RequestBody User newUser){
 
-        System.out.println("login starting");
         try {
-            if(userRepository.findByUsername(newUser.getUsername()) != null)
-            {
-                return ResponseEntity.status(400).body("Username already exists");
-            }
-            newUser.setPassword(PasswordHelper.encryptPassword(newUser.getPassword()));
-            userRepository.save(newUser);
-            System.out.println("saved + " + newUser);
-            return ResponseEntity.ok(newUser);
+            return authService.register(newUser);
         } catch (UsernameNotFoundException | BadCredentialsException ex) {
             // Handle invalid credentials or user
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid credentials");
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST).
+                    message("Could not register new User").build();
         }
+
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest userRequest){
+    public ResponseObject<?> login(@RequestBody LoginRequest userRequest){
 
         System.out.println("login starting");
         try {
-            LoginResponse user = authService.loginUser(userRequest);
-            return ResponseEntity.ok(user);
+
+            return authService.loginUser(userRequest);
         } catch (UsernameNotFoundException | BadCredentialsException ex) {
             // Handle invalid credentials or user
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid credentials");
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("Could not login : Bad Request")
+                    .Data(null).build();
         }
     }
 
