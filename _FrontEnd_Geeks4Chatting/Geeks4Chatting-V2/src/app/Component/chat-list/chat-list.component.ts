@@ -70,7 +70,6 @@ export class ChatListComponent implements OnInit  {
     this.contactService.fetchContacts(userId).subscribe(
       (fetchedContacts: User[]) => {
         this.Users = fetchedContacts;
-     //   this.messageService.updateList(this.Users);
       },
       (error: any) => {
         // Handle error if needed
@@ -128,13 +127,11 @@ export class ChatListComponent implements OnInit  {
     });
     dialogRef.afterClosed().subscribe(result => {
 
-      this.onDialogClosed(result);
+  
     });
   }
   
-  onDialogClosed(result: any): void {
-    this.getContacts();
-  }
+  
   openProfileDialog(): void {
     const dialogRef = this.dialog.open(ProfileComponent, {
       panelClass: 'custom-dialog-container', // Add a custom class to the dialog container

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message, MessageStatus } from 'src/app/Model/message.model';
 import { User } from 'src/app/Model/user.model';
@@ -28,7 +28,6 @@ export class ChatThreadComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-     // this.conversationId = this.getconversationid();
       this.conversationId = params['conversationId'];
       // Update messages based on the new conversationId
       this.messageService.getMessagesForConversation(this.conversationId).subscribe((messages) => {
@@ -38,6 +37,7 @@ export class ChatThreadComponent implements OnInit {
   }
 
   sendMessage(): void {
+    
     if (this.newMessageContent.trim() === '') {
       return;
     }
@@ -50,6 +50,7 @@ export class ChatThreadComponent implements OnInit {
       timestamp: new Date(),
       status : MessageStatus.Sent
     };
+    
     const [user1,user2] = this.conversationId.split('_').map(Number);
    
     // send message through websocket
@@ -69,28 +70,7 @@ export class ChatThreadComponent implements OnInit {
     this.newMessageContent = '';
   }
 
-  getMessageSenderImage(sender: number): string {
-    // Provide the appropriate image URL based on the sender (you can customize this)
-    return sender === this.currentUser ? 'url(https://image.flaticon.com/icons/svg/145/145867.svg)' : 'url(https://image.flaticon.com/icons/svg/327/327779.svg)';
-  }
  
-  getconversationid(sender : number, receiver: number): string{
-
-    
-    if(sender < receiver)
-    {
-      return sender+"_"+receiver;
-    }else
-    if(sender > receiver)
-    {
-      return receiver+"_"+sender;
-    }else
-    {
-      return "ubnormal chatid";
-    }
-
-  }
-
 }
 
 

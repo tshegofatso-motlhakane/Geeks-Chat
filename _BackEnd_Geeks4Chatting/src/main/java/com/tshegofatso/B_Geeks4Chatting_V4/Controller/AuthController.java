@@ -2,8 +2,8 @@ package com.tshegofatso.B_Geeks4Chatting_V4.Controller;
 
 import com.tshegofatso.B_Geeks4Chatting_V4.Helper.PasswordHelper;
 import com.tshegofatso.B_Geeks4Chatting_V4.Model.User;
-import com.tshegofatso.B_Geeks4Chatting_V4.Model.UserRequest;
-import com.tshegofatso.B_Geeks4Chatting_V4.Model.UserResponse;
+import com.tshegofatso.B_Geeks4Chatting_V4.Model.LoginRequest;
+import com.tshegofatso.B_Geeks4Chatting_V4.Model.LoginResponse;
 import com.tshegofatso.B_Geeks4Chatting_V4.Repository.UserRepository;
 import com.tshegofatso.B_Geeks4Chatting_V4.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +45,11 @@ public class AuthController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest userRequest){
+    public ResponseEntity<?> login(@RequestBody LoginRequest userRequest){
 
         System.out.println("login starting");
         try {
-            UserResponse user = authService.loginUser(userRequest);
+            LoginResponse user = authService.loginUser(userRequest);
             return ResponseEntity.ok(user);
         } catch (UsernameNotFoundException | BadCredentialsException ex) {
             // Handle invalid credentials or user

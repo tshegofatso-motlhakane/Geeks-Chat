@@ -28,9 +28,8 @@ export class ChatComponent implements OnInit  {
 
   getold() {
         this.messageService.getOldMessages(this.user).subscribe(
-          (messages) => {
-           
-            console.log(messages);
+          () => {
+           this.contactService.updateList();
           },
           (error) => {
             console.error('Error fetching old messages:', error);

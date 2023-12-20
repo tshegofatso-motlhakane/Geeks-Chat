@@ -4,6 +4,7 @@ import com.tshegofatso.B_Geeks4Chatting_V4.Model.Contact;
 import com.tshegofatso.B_Geeks4Chatting_V4.Model.User;
 import com.tshegofatso.B_Geeks4Chatting_V4.Repository.ContactRepository;
 import com.tshegofatso.B_Geeks4Chatting_V4.Repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/contact")
 public class ContactController {
 
@@ -26,9 +28,9 @@ public class ContactController {
 
         try{
             List<User> userList = userRepository.findUsersNotInContactsByUsername(userid,searchTerm);
-            if(userList == null)
+            if(userList.isEmpty())
             {
-                System.out.println("no found contacts");
+                log.info("no found contacts");
                 return ResponseEntity.status(404).body("No users exist");
             }
             System.out.println("sending found contacts");
@@ -66,7 +68,7 @@ public class ContactController {
     }
 
     @GetMapping("/get/{userid}/all")
-    public ResponseEntity<?> getallContacts(@PathVariable int userid){
+    public ResponseEntity<?> getAllContacts(@PathVariable int userid){
 
         try{
          List<User> contacts = userRepository.findContactsForUser(userid);
@@ -84,7 +86,7 @@ public class ContactController {
         }catch(Exception e)
         {
             System.out.println(e.toString());
-            return ResponseEntity.status(401).body("Failed to add contact");
+            return ResponseEntity.status(403).body("Failed to get contacts");
         }
 
     }
