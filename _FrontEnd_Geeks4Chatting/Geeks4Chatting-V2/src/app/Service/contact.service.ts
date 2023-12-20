@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Contact, CreateContact, User } from '../Model/user.model';
+import { CreateContact, User } from '../Model/user.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { MessageService } from './message.service';

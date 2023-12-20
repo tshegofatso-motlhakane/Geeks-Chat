@@ -11,6 +11,9 @@ import { AuthService } from 'src/app/Service/auth.service';
 export class LoginComponent {
   loginForm!: FormGroup;
   loginfail : boolean = false;
+  formSubmitted : boolean = false;
+  formError : boolean = false;
+  errorMessage : string = "";
 
   constructor(private fb: FormBuilder , private router: Router,private authService : AuthService) {}
 
@@ -22,39 +25,33 @@ export class LoginComponent {
   }
 
   login() {
+    this.formSubmitted = true;
     if (this.loginForm.valid) {
+      this.formError = false;
       this.authService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe({
         next: (response) => {
-          // Handle successful login, 'response' will contain user details
-          if (response != null) {
+       
+          if ( response.data != null) {
   
-            console.log('Login successful', response);
-            sessionStorage.setItem('currentUser', JSON.stringify(response))
+            console.log(response.message);
+            sessionStorage.setItem('currentUser', JSON.stringify(response.data))
             this.router.navigate(['/chat']);
           } else {
-             console.log('user not found', response);
-             this.loginfail =true;
-             this.router.navigate(['/login']);
+            console.log("ERROR : " + response.status +" => "+response.message);
+            this.loginfail = true;
+            this.errorMessage = response.message; 
           }
   
         },
         error: (error) => {
-          // Handle login error
-          this.loginfail =true;
-          console.error('Login failed', error);
-          // Display a user-friendly error message based on the error type
-          if (error.status === 401) {
-            console.error('Invalid username or password.');
-            // You may want to display an error message to the user.
-          } else {
-            console.error('An unexpected error occurred.');
-            // You may want to display a generic error message to the user.
-          }
+          console.log("Problem " + error);
         },
       });
     } else {
       // Handle the case where the form is not valid
-      console.log('Form is not valid. Please check your inputs.');
+      this.formError = true;
+      this.errorMessage = "Please fill in the required fields!";
+      console.log('Form is not valid.');
     }
   }
 

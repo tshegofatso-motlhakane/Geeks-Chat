@@ -27,4 +27,18 @@ export interface MessageList{
   unread :  number;
 }
 
+export interface MessageList{
+  userid:number;
+  username : String;
+  lastestText : String;
+  timestamp : Date;
+  unread :  number;
+}
+
+export interface ResponseObject<T> {
+  message: string;
+  status: string; // Assuming status is a string, adjust it accordingly
+  data: T;
+}
+
   

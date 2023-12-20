@@ -4,12 +4,16 @@
            Log In
         </div>
         <form [formGroup]="loginForm" (ngSubmit)="login()">
+           
            <div class="field">
-              <input type="text" formControlName="username" placeholder="Username">
+              <p *ngIf="formError" class="required">*</p>
+              <input type="text" formControlName="username" placeholder="Username" >
               <span class="icons"><mat-icon >email</mat-icon></span>
               <label>Email</label>
            </div>
+           
            <div class="field">
+            <p *ngIf="formError" class="required">*</p>
               <input type="password" formControlName="password" placeholder="Password">
               <span class="icons"><mat-icon>lock</mat-icon></span>
               <label>Password</label>
@@ -17,7 +21,7 @@
            <div class="forgot-pass">
               <a href="#">Forgot Password?</a>
            </div>
-           <p *ngIf="loginfail" class="invalid-login">invalid username or password!</p>
+           <p *ngIf="loginfail || formError " class="invalid-login">{{errorMessage}}</p>
            <button type="submit">Sign in</button>
            
            <div class="sign-up">

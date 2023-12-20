@@ -36,7 +36,7 @@ body{
   position: relative;
 }
 .field{
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .field input{
   height: 100%;
@@ -128,4 +128,9 @@ mat-icon {
     font-size: 20px;
     margin-top: 15px;
     color: rgb(167, 197, 199); /* Set the desired color */
+  }
+
+  .required {
+  
+    color: rgb(199, 11, 48);; /* Adjust styling as needed */ /* Adjust styling as needed */
   }
