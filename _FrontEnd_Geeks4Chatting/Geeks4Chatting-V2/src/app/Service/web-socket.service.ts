@@ -74,24 +74,28 @@ export class WebSocketService {
 
 
   subscribeToConversations(): void {
-    this.conversationIds.forEach((conversationId) => {
-      const destination = `/topic/messages/${conversationId}`;
-      console.log('Subscribing to ' + destination);
-      this.stompClient.subscribe(destination, (message) => {
-        const parsedMessage: Message = JSON.parse(message.body);
-        console.log('Received message:', parsedMessage);
-        parsedMessage.status = MessageStatus.Received;
-        this.updateMessageStatus(parsedMessage.messageid);
-        this.callupdate(conversationId,parsedMessage);
-        this.messageService.addMessage(conversationId, parsedMessage);
+    console.log(this.conversationIds);
+    if(this.conversationIds)
+    {
+      this.conversationIds.forEach((conversationId) => {
+        const destination = `/topic/messages/${conversationId}`;
+        console.log('Subscribing to ' + destination);
+        this.stompClient.subscribe(destination, (message) => {
+          const parsedMessage: Message = JSON.parse(message.body);
+          console.log('Received message:', parsedMessage);
+          parsedMessage.status = MessageStatus.Received;
+          this.updateMessageStatus(parsedMessage.messageid);
+          this.callupdate(conversationId,parsedMessage);
+          this.messageService.addMessage(conversationId, parsedMessage);
+        });
       });
-    });
+    }
+    
   }
 
   subscribeToConversation(conversationId: string): void {
     const destination = `/topic/messages/${conversationId}`;
     console.log('new Subscribing to ' + destination);
-    
     const subscription = this.stompClient.subscribe(destination, (message) => {
       const parsedMessage: Message = JSON.parse(message.body);
       console.log('Received message:', parsedMessage);

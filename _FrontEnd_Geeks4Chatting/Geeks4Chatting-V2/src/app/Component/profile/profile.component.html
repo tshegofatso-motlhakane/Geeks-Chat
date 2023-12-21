@@ -2,7 +2,7 @@
     <h2>Edit Profile</h2>
     <form (ngSubmit)="onSubmit()">
         <div class="profilePicture">
-            <label for="profilePic">Profile Picture (URL):</label>
+            <!-- <label for="profilePic">Profile Picture (URL):</label> -->
         </div>
 
         <div class="row-form">
@@ -31,6 +31,6 @@
             <textarea id="bio" [(ngModel)]="user.bio" name="bio"></textarea>
         </div>
   
-      <button type="submit"></button> 
+      <button type="submit"><b>Update</b></button> 
     </form>
 </div>

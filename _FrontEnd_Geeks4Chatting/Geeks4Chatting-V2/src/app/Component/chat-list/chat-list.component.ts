@@ -85,12 +85,13 @@ export class ChatListComponent implements OnInit  {
   }
  
   selectUser(selectedUser: MessageList) {
+    this.getContacts();
     console.log("selected " + selectedUser.username);
   
     // Find the user in the names2 array based on the user ID
     const selected = this.Users.find(user => user.userid === selectedUser.userid);
   
-    if (selected !== undefined) {
+    if (selected) {
       // Set the selected user in the chatService
       this.chatService.selectedUser = selected;
       this.messagelist = this.messagelist.map(message => {
@@ -133,9 +134,11 @@ export class ChatListComponent implements OnInit  {
   
   
   openProfileDialog(): void {
-    const dialogRef = this.dialog.open(ProfileComponent, {
-      panelClass: 'custom-dialog-container', // Add a custom class to the dialog container
-    });
+    // const dialogRef = this.dialog.open(ProfileComponent, {
+    //   panelClass: 'custom-dialog-container', // Add a custom class to the dialog container
+    // });
+
+    this.router.navigate(['/profile']);
   }
 
 
