@@ -15,25 +15,25 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-    public ResponseObject<LoginResponse> loginUser(LoginRequest userRequest){
+    public ResponseObject<User> loginUser(LoginRequest userRequest){
         User user = userRepository.findByUsername(userRequest.getUsername());
 
         // Check if the user exists and the password matches
         if (user != null && PasswordHelper.matchPassword(userRequest.getPassword(), user.getPassword())) {
             // Return UserResponse
-            return ResponseObject.<LoginResponse>builder()
+            return ResponseObject.<User>builder()
                     .status(HttpStatus.OK).
                     message("User logged in")
-                    .Data(new LoginResponse(user.getUserid(), user.getUsername())).build();
+                    .Data(user).build();
         }else if(user != null){
 
-            return ResponseObject.<LoginResponse>builder()
+            return ResponseObject.<User>builder()
                     .status(HttpStatus.UNAUTHORIZED).
                     message("Invalid Credentials ")
                     .Data(null).build();
         }
 
-        return ResponseObject.<LoginResponse>builder()
+        return ResponseObject.<User>builder()
                 .status(HttpStatus.NOT_FOUND).
                 message("User with username/email does not exist")
                 .Data(null).build();
