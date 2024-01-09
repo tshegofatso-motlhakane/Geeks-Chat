@@ -16,7 +16,9 @@ import { ChatThreadComponent } from './Component/chat-thread/chat-thread.compone
 import { AddContactComponent } from './Component/add-contact/add-contact.component';
 import {MatDialogModule  } from '@angular/material/dialog';
 import { ProfileComponent } from './Component/profile/profile.component';
-import { WebSocketService } from './Service/web-socket.service';
+import { ProfileAvatarsComponent } from './Component/profile-avatars/profile-avatars.component';
+import {MatGridListModule} from '@angular/material/grid-list';
+
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { WebSocketService } from './Service/web-socket.service';
     ChatThreadComponent,
     AddContactComponent,
     ProfileComponent,
+    ProfileAvatarsComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +43,7 @@ import { WebSocketService } from './Service/web-socket.service';
     RouterModule,
     HttpClientModule,
     MatDialogModule ,
+    MatGridListModule
   ],
   providers: [
     

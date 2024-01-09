@@ -46,7 +46,6 @@ public class ContactController {
     public ResponseEntity<?> addContact(@RequestBody Contact contact){
 
         try{
-
             contactRepository.save(contact);
             List<User> contacts = userRepository.findContactsForUser(contact.getUser1());
             if(!contacts.isEmpty())

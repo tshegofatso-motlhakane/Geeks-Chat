@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
-import { Message, MessageList, MessageStatus } from '../Model/message.model';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { Message, MessageStatus } from '../Model/message.model';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../Model/user.model';
-import { ContactService } from './contact.service';
+import { AuthService } from './auth.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,10 @@ export class MessageService {
 
   private conversations: { [key: string]: BehaviorSubject<Message[]> } = {};
 
-  
-
   private baseUrl = 'http://localhost:8080/api/messages';
- 
-
-  constructor(private http : HttpClient ) {
 
 
+  constructor(private http: HttpClient, private authService : AuthService) {
   }
 
   getMessagesForConversation(conversationId: string): Observable<Message[]> {
@@ -29,35 +25,19 @@ export class MessageService {
     return this.conversations[conversationId].asObservable();
   }
 
-  // updateLatestMessageForUser(userId: number, updatedMessage: Message) {
-  //   const currentList = this.messageListSubject.getValue();
-  //   console.log('Current List:', currentList);
-  
-  //   const updatedList = currentList.map(message => {
-  //     if (message.userid === userId) {
-  //       console.log('Updating Message:', message);
-  //       message.lastestText = updatedMessage.content;
-  //       message.timestamp = updatedMessage.timestamp;
-  //     }
-  //     return message;
-  //   });
-  
-  //   console.log('Updated List:', updatedList);
-  
-  //   this.messageListSubject.next(updatedList);
-  // }
-  
+
+
   addMessage(conversationId: string, message: Message): void {
+    console.log("Step 5 + must increment unread I think");
+
     if (!this.conversations[conversationId]) {
       this.conversations[conversationId] = new BehaviorSubject<Message[]>([]);
     }
-    
-    const [user1, user2] = conversationId.split('_').map(Number);
-   // this.updateLatestMessageForUser(user2,message);
     const currentMessages = this.conversations[conversationId].getValue();
     const updatedMessages = [...currentMessages, message];
     this.conversations[conversationId].next(updatedMessages);
   }
+
   updateMessageStatus(conversationId: string): Observable<void> {
     const url = `${this.baseUrl}/updateStatusToRead/${conversationId}`;
     return this.http.put<void>(url, {}).pipe(
@@ -84,61 +64,84 @@ export class MessageService {
 
   getOldMessages(userId: number): Observable<Message[]> {
     this.clearMessages();
-  const url = `${this.baseUrl}/${userId}/oldMessages`;
-  console.log(" trying to get old chats");
-  return this.http.get<Message[]>(url).pipe(
-    tap(messages => {
-     
-      messages.forEach(message => {
-        const conversationId = message.conversationId;
+    const url = `${this.baseUrl}/${userId}/oldMessages`;
+    console.log(" trying to get old chats");
+    return this.http.get<Message[]>(url).pipe(
+      tap(messages => {
 
-        // If the conversation ID exists in the conversations map
-        if (this.conversations[conversationId]) {
-          const currentMessages = this.conversations[conversationId].getValue();
-          const updatedMessages = [...currentMessages, message];
-          this.conversations[conversationId].next(updatedMessages);
-        } else {
-          // If the conversation ID does not exist, create a new BehaviorSubject
-          this.conversations[conversationId] = new BehaviorSubject<Message[]>([message]);
-        }
-      });
-    })
-  );
-}
+        messages.forEach(message => {
+          const conversationId = message.conversationId;
 
-getLastMessageText(conversationId: string): Message {
-  const messages = this.conversations[conversationId]?.getValue() || [];
-
-  if (messages.length > 0) {
-    const lastMessage = messages[messages.length - 1];
-    return lastMessage;
-  }else{
-    const emptyMessage: Message = {
-      messageid:0,
-      sender: 0, // Set the appropriate default value
-      content: '',
-      conversationId: '',
-      timestamp: new Date(), // Set the appropriate default value
-      status: MessageStatus.Sent // Set the appropriate default value
-    };
-  
-    return emptyMessage;
+          // If the conversation ID exists in the conversations map
+          if (this.conversations[conversationId]) {
+            const currentMessages = this.conversations[conversationId].getValue();
+            const updatedMessages = [...currentMessages, message];
+            this.conversations[conversationId].next(updatedMessages);
+          } else {
+            // If the conversation ID does not exist, create a new BehaviorSubject
+            this.conversations[conversationId] = new BehaviorSubject<Message[]>([message]);
+          }
+        });
+      })
+    );
   }
-  // Or any default value
-}
+
+  getLastMessageText(conversationId: string): Message {
+    const messages = this.conversations[conversationId]?.getValue() || [];
+
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      return lastMessage;
+    } else {
+      const emptyMessage: Message = {
+        messageid: 0,
+        sender: 0, // Set the appropriate default value
+        content: '',
+        conversationId: '',
+        timestamp: new Date(), // Set the appropriate default value
+        status: MessageStatus.Sent // Set the appropriate default value
+      };
+
+      return emptyMessage;
+    }
+    // Or any default value
+  }
 
 
 
-getReceivedMessagesCount(conversationId: string): Observable<number> {
-  return this.getMessagesForConversation(conversationId).pipe(
-    map(messages => messages.filter(message => message.status === MessageStatus.Received).length)
-  );
-}
+  getReceivedMessagesCount(conversationId: string): Observable<number> {
+    return this.getMessagesForConversation(conversationId).pipe(
+      map(messages => messages.filter(message => message.status === MessageStatus.Received).length)
+    );
+  }
+
+  getReceivedMessagesCount2(conversationId: string): Observable<number> {
+    return this.getMessagesForConversation(conversationId).pipe(
+      map(messages => {
+        const currentUser : number = this.authService.getCurrentUser(); // Replace with actual method
+        return messages.filter(
+          message => message.status === MessageStatus.Received && message.sender !== currentUser
+        ).length;
+      })
+    );
+  }
+
+  countReceivedMessages(conversationId: string): number {
+    const conversation = this.conversations[conversationId]?.value || [];
+    const currentUser : number = this.authService.getCurrentUser();
+    return conversation.reduce((count, message) => {
+      if (message.status === MessageStatus.Received && message.sender !== currentUser) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+  }
+  
   clearMessages(): void {
-      // Iterate through each key in the conversations object
-      Object.keys(this.conversations).forEach((key) => {
-        // Clear the conversation for the current key
-        this.conversations[key].next([]);
-      });
+    // Iterate through each key in the conversations object
+    Object.keys(this.conversations).forEach((key) => {
+      // Clear the conversation for the current key
+      this.conversations[key].next([]);
+    });
   }
 }

@@ -13,7 +13,7 @@
     </div>
   </header>
 
-  <main class="msger-chat" #scrollMe [scrollTop]="messages.length === 0 ? 0 : scrollMe.scrollHeight" >
+  <main class="msger-chat"  #scrollMe (scroll)="onScroll()" >
 
     <div *ngFor="let message of messages" class="msg" [ngClass]="{ 'left-msg': message.sender !== currentUser, 'right-msg': message.sender === currentUser}">
 

@@ -27,7 +27,9 @@
           <div class="contact-avatar"></div>
           <div class="contact-info">
             <div class="contact-name">{{ contact.username }}</div>
-            <div class="contact-message-preview">{{ contact.lastestText }}</div>
+            <div class="contact-message-preview">
+              {{ contact.lastestText.length <= 30 ? contact.lastestText : contact.lastestText.slice(0, 30) + '...' }}
+            </div>
           </div>
           <div class="unread" *ngIf="contact.unread > 0"><p>{{contact.unread}}</p></div>
         </div>

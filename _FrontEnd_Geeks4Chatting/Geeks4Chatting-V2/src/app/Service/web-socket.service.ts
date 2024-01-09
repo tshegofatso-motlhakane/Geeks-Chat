@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Message, MessageStatus } from '../Model/message.model';
 import { MessageService } from './message.service';
 import { ContactService } from './contact.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,20 +49,21 @@ export class WebSocketService {
     );
   }
 
-  sendMessage(message: Message): void {
-    console.log(message.conversationId + ' websock serv');
+  sendMessage(message: Message): Observable<any> {
     const destination = `/app/api/chat/${message.conversationId}`;
-    this.stompClient.send(destination,{ 'ack': 'client' }, JSON.stringify(message));
+     this.stompClient.send(destination,{ 'ack': 'client' }, JSON.stringify(message));
+     return of(null); 
   }
 
   updateMessageStatus(messageId: number) {
-    console.log("calling updated status line");
+    console.log("Step 3");
+
     const baseUrl = 'http://localhost:8080/api/messages';
     const url = `${baseUrl}/updateStatus/${messageId}`;
     
     this.http.put<string>(url, {}).subscribe(
         response => {
-            console.log(response);
+            console.log("Step 3 response : " + response);
             // Handle the response as needed
         },
         error => {
@@ -81,8 +82,8 @@ export class WebSocketService {
         const destination = `/topic/messages/${conversationId}`;
         console.log('Subscribing to ' + destination);
         this.stompClient.subscribe(destination, (message) => {
+          console.log("Step 2");
           const parsedMessage: Message = JSON.parse(message.body);
-          console.log('Received message:', parsedMessage);
           parsedMessage.status = MessageStatus.Received;
           this.updateMessageStatus(parsedMessage.messageid);
           this.callupdate(conversationId,parsedMessage);
@@ -108,6 +109,7 @@ export class WebSocketService {
 
   callupdate(conversation : string , message : Message){
     const [user1,user2] = conversation.split('_').map(Number);
+    console.log("Step 4 + firstime calling updatelastesMesFOr User");
 
     if(user1 === this.contactService.getCurrentUser())
     {
@@ -115,7 +117,7 @@ export class WebSocketService {
       this.contactService.updateLatestMessageForUser(user2,message);
     }else
     {
-      console.log("Update message 1" );
+      console.log("Update message 2" );
       this.contactService.updateLatestMessageForUser(user1,message);
     }
   }

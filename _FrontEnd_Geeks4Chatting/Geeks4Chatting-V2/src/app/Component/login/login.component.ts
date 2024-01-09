@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User, UserProfile } from 'src/app/Model/user.model';
 import { AuthService } from 'src/app/Service/auth.service';
 
 @Component({
@@ -32,9 +33,22 @@ export class LoginComponent {
         next: (response) => {
        
           if ( response.data != null) {
-  
-            console.log(response.message);
             sessionStorage.setItem('currentUser', JSON.stringify(response.data))
+            
+
+            const currentUserString = sessionStorage.getItem('currentUser');
+
+            const user: UserProfile = {
+              firstName: response.data.firstname || '',  // If response.data.firstname is null or undefined, use an empty string
+              lastName: response.data.lastname || '',
+              email: response.data.email || '',
+              username: response.data.username || '',
+              avatar: response.data.avatar || '',
+              bio: response.data.bio || ''
+            };
+            
+            sessionStorage.setItem("userInfo",JSON.stringify(user));
+            console.log(user);
             this.router.navigate(['/chat']);
           } else {
             console.log("ERROR : " + response.status +" => "+response.message);

@@ -43,10 +43,8 @@ export class ContactService {
     console.log('Current List:', currentList);
       let unread: number = 0;
       let conv = this.getconversationid(userId);
-      // this.messageService.getReceivedMessagesCount(conv).subscribe(unreadCount => {
-      //   unread = unreadCount;
-      // });
-  
+      unread = this.messageService.countReceivedMessages(conv);
+      console.log("ureadin updatelatest : " + unread);
     const updatedList = currentList.map(message => {
       if (message.userid === userId) {
         console.log('Updating Message:', message);
@@ -66,10 +64,8 @@ export class ContactService {
       const conversationId = this.getconversationid(user.userid);
       const lastMessageText = this.messageService.getLastMessageText(conversationId);
       let unread: number = 0;
-      // this.messageService.getReceivedMessagesCount(conversationId).subscribe(unreadCount => {
-      //   unread = unreadCount;
-      // });
-  
+      unread = this.messageService.countReceivedMessages(conversationId);
+      console.log("uread in updatelist : " + unread);
       return {
         userid: user.userid,
         username: user.username,

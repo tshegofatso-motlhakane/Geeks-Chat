@@ -16,7 +16,7 @@ export interface UserProfile {
     lastName: string;
     email: string;
     username: string;
-    profilePic: string; // Assuming the profile picture is a URL
+    avatar: string; // Assuming the profile picture is a URL
     bio: string;
   }
 export interface CreateContact{

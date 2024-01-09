@@ -1,3 +1,9 @@
-<body>
-    
-</body>
+<div class="avatar-container">
+    <h3>Choose Your Avatar</h3>
+    <mat-grid-list cols="4" rowHeight="1:1" class="avatar-grid" gutterSize="10px">
+        <mat-grid-tile *ngFor="let avatar of avatars" (click)="onAvatarSelected(avatar)">
+            <img [src]="avatar" [alt]="avatar" [class.selected]="avatar === selectedAvatar" class="avatar-image">
+        </mat-grid-tile>
+    </mat-grid-list>
+  <button class="avatar-btn">pick avatar</button>
+</div>

@@ -24,7 +24,7 @@ export class AuthService {
     return this.http.post<ResponseObject<any>>(`${this.baseUrl}/register`, newuser);
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string): Observable<ResponseObject<any>> {
     const loginData = { username, password };
     return this.http.post<ResponseObject<any>>(`${this.baseUrl}/login`, loginData);
   }
@@ -37,5 +37,16 @@ export class AuthService {
   isAuthenticated(): boolean {
 
     return this.isAuth;
+  }
+
+  getCurrentUser(): number {
+    const currentUserString = sessionStorage.getItem('currentUser');
+
+    if (currentUserString) {
+      const currentUser: User = JSON.parse(currentUserString);
+      return currentUser.userid;
+    }
+
+    return 0; // or any other default value if user is not found
   }
 }

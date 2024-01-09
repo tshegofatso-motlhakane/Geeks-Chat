@@ -19,8 +19,6 @@ export class ChatComponent implements OnInit  {
 
    }
   ngOnInit(): void {
-  
-    
     this.websocketService.fetchConversationIds(this.user);
     this.getold();
     

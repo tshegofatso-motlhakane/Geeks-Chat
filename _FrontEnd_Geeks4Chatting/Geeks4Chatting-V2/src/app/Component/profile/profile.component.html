@@ -2,7 +2,9 @@
     <h2>Edit Profile</h2>
     <form (ngSubmit)="onSubmit()">
         <div class="profilePicture">
-            <!-- <label for="profilePic">Profile Picture (URL):</label> -->
+        <div *ngIf="user.avatar  === ''">add pic</div>
+            <img *ngIf="user.avatar  !== ''" [src]="user.avatar" [alt]="user.avatar" class="avatar-image">
+            <button class="avatar-btn" (click)="updateAvatar()"><mat-icon>add</mat-icon></button>
         </div>
 
         <div class="row-form">
@@ -19,18 +21,20 @@
         <div class="row-form">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" [(ngModel)]="user.email" name="email" required>  </div>
+                <input type="email" id="email" [(ngModel)]="user.email" name="email" required>
+            </div>
 
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input type="text" id="username" [(ngModel)]="user.username" name="username" required> </div>
+                <input type="text" id="username" [(ngModel)]="user.username" name="username" required>
+            </div>
         </div>
 
         <div class="row-form-bio">
             <label for="bio">Bio:</label>
             <textarea id="bio" [(ngModel)]="user.bio" name="bio"></textarea>
         </div>
-  
-      <button type="submit"><b>Update</b></button> 
+
+        <button class="update-btn"type="submit" ><b>Update</b></button>
     </form>
 </div>

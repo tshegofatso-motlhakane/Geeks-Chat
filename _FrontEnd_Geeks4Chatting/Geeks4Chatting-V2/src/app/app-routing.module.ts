@@ -11,9 +11,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
-  { path: 'chat/:conversationId', component: ChatComponent, canActivate: [authGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
-
+  { path: 'chat/:conversationId', component: ChatComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({

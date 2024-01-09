@@ -134,11 +134,10 @@ export class ChatListComponent implements OnInit  {
   
   
   openProfileDialog(): void {
-    // const dialogRef = this.dialog.open(ProfileComponent, {
-    //   panelClass: 'custom-dialog-container', // Add a custom class to the dialog container
-    // });
+    const dialogRef = this.dialog.open(ProfileComponent, {
+      panelClass: 'custom-dialog-container', // Add a custom class to the dialog container
+    });
 
-    this.router.navigate(['/profile']);
   }
 
 
