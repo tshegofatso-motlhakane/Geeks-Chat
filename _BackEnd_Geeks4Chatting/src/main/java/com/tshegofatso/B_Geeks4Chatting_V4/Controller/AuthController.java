@@ -31,6 +31,7 @@ public class AuthController {
     public ResponseObject<?> register(@RequestBody User newUser){
 
         try {
+            System.out.println(newUser.toString());
             return authService.register(newUser);
         } catch (UsernameNotFoundException | BadCredentialsException ex) {
             // Handle invalid credentials or user

@@ -76,7 +76,6 @@ public class ContactController {
              System.out.println("setting password to null");
              for (User u : contacts) {
                  u.setPassword("");
-
              }
          }
             System.out.println("sending contacts");

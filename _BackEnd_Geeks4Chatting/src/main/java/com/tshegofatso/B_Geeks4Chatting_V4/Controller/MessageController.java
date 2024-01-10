@@ -35,10 +35,12 @@ public class MessageController {
         // Save the message to the database
         message.setTimestamp(LocalDateTime.now());
         message.setConversationId(conversationId);
-        messageRepository.save(message);
-        // Send the message to the specified conversation
-        messagingTemplate.convertAndSend("/topic/messages/" + conversationId, message);
-        System.out.println("sent to topic");
+
+        System.out.println("sending AND saving");
+       Message newmess =  messageRepository.save(message);
+        messagingTemplate.convertAndSend("/topic/messages/" + conversationId, newmess);
+
+
     }
 
     @PutMapping("api/messages/updateStatus/{messageId}")
