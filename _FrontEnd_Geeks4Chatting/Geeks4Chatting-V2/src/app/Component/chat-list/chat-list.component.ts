@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from 'src/app/Model/user.model';
+import { User, UserProfile } from 'src/app/Model/user.model';
 import { AuthService } from 'src/app/Service/auth.service';
 import { ContactService } from 'src/app/Service/contact.service';
 import { AddContactComponent } from '../add-contact/add-contact.component';
@@ -19,19 +19,19 @@ import { tap } from 'rxjs';
 })
 export class ChatListComponent implements OnInit  {
   messagelist: MessageList[] = [];
-  Users: User[] = [];
+  Users: UserProfile[] = [];
   CurrentUser : String ="";
+  avatar : String = "";
   searchUsername: string = '';
   filteredMessagelist: MessageList[] = [];
 
   constructor(
-    // private chatService: ChatService,
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
     public contactService: ContactService,
     public chatService : ChatService,
-    private messageService : MessageService
+    private messageService : MessageService,
   ) {}
  
   ngOnInit(): void {
@@ -56,19 +56,20 @@ export class ChatListComponent implements OnInit  {
   }
 
   updateCurrentUsr(){
-    const currentUserString = sessionStorage.getItem('currentUser');
+    const currentUserString = sessionStorage.getItem('userInfo');
 
     if (currentUserString) {
-      const currentUser: User = JSON.parse(currentUserString);
+      const currentUser: UserProfile = JSON.parse(currentUserString);
       this.CurrentUser = currentUser.username;
+      this.avatar = currentUser.avatar;
     }
 
   }
   
   fetchContacts(): void {
-    const userId : number = this.contactService.getCurrentUser(); // Get the actual user ID
+    const userId : number = this.authService.getCurrentUser(); // Get the actual user ID
     this.contactService.fetchContacts(userId).subscribe(
-      (fetchedContacts: User[]) => {
+      (fetchedContacts: UserProfile[]) => {
         this.Users = fetchedContacts;
       },
       (error: any) => {
@@ -90,18 +91,22 @@ export class ChatListComponent implements OnInit  {
   
     // Find the user in the names2 array based on the user ID
     const selected = this.Users.find(user => user.userid === selectedUser.userid);
-  
+    const conv = this.contactService.getconversationid(selectedUser.userid);
     if (selected) {
       // Set the selected user in the chatService
       this.chatService.selectedUser = selected;
+     const number = this.messageService.countReceivedMessages(conv);
       this.messagelist = this.messagelist.map(message => {
         if (message.userid === selected.userid) {
-          message.unread = 0; // Update unread count for the selected user
-        }
+          if(number > 0)
+          {
+            message.unread = 0; // Update unread count for the selected user
+          }
+          }
         return message;
       });
       // Get the conversation ID and navigate to the chat
-      const conv = this.contactService.getconversationid(selectedUser.userid);
+     
       this.messageService.updateMessageStatus(conv).pipe(
         tap(() => {
           // Perform side effects here

@@ -33,6 +33,7 @@ export interface MessageList{
   lastestText : String;
   timestamp : Date;
   unread :  number;
+  avatar : string;
 }
 
 export interface ResponseObject<T> {

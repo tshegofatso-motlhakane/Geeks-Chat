@@ -127,6 +127,7 @@ export class MessageService {
   }
 
   countReceivedMessages(conversationId: string): number {
+    console.log("updating status mowwwwwwwwww");
     const conversation = this.conversations[conversationId]?.value || [];
     const currentUser : number = this.authService.getCurrentUser();
     return conversation.reduce((count, message) => {

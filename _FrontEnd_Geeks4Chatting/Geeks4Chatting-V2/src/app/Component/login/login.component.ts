@@ -33,14 +33,15 @@ export class LoginComponent {
         next: (response) => {
        
           if ( response.data != null) {
-            sessionStorage.setItem('currentUser', JSON.stringify(response.data))
-            
+           
+            sessionStorage.setItem('currentUser', JSON.stringify(response.data.userid));
 
             const currentUserString = sessionStorage.getItem('currentUser');
 
             const user: UserProfile = {
-              firstName: response.data.firstname || '',  // If response.data.firstname is null or undefined, use an empty string
-              lastName: response.data.lastname || '',
+              userid : response.data.userid,
+              firstname: response.data.firstname || '',  // If response.data.firstname is null or undefined, use an empty string
+              lastname: response.data.lastname || '',
               email: response.data.email || '',
               username: response.data.username || '',
               avatar: response.data.avatar || '',
@@ -48,7 +49,6 @@ export class LoginComponent {
             };
             
             sessionStorage.setItem("userInfo",JSON.stringify(user));
-            console.log(user);
             this.router.navigate(['/chat']);
           } else {
             console.log("ERROR : " + response.status +" => "+response.message);

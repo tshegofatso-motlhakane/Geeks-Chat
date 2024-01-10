@@ -2,6 +2,7 @@ import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { User, UserProfile } from 'src/app/Model/user.model';
 import { ProfileAvatarsComponent } from '../profile-avatars/profile-avatars.component';
+import { ChatService } from 'src/app/Service/chat.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,14 +15,15 @@ export class ProfileComponent implements OnInit {
 
   user!: UserProfile;
   private dialogref : any;
-  constructor( private dialog: MatDialog){
+  constructor( private dialog: MatDialog,
+    private chatService: ChatService){
 
   }
   ngOnInit(): void {
-    this.newMethod();
+    this.SetUserInfo();
   }
   
-   newMethod() {
+   SetUserInfo() {
     if (sessionStorage.getItem("userInfo")) {
       const currentUserString = sessionStorage.getItem('userInfo');
 
@@ -30,12 +32,16 @@ export class ProfileComponent implements OnInit {
         console.log("current niggah : " + currentUser);
         this.user = currentUser;
       }
-
     }
   }
 
   onSubmit() {
-    // Implement logic to update user details (e.g., make an API call)
+    
+   sessionStorage.setItem("userInfo",JSON.stringify(this.user));
+   this.SetUserInfo();
+
+   this.chatService.updateUserInfo(this.user);
+
     console.log('User details updated:', this.user);
   }
 
@@ -48,11 +54,11 @@ export class ProfileComponent implements OnInit {
     this.dialogref.componentInstance.selectAvatar.subscribe((selectedAvatar: string) => {
       console.log(selectedAvatar);
       this.saveDetails(selectedAvatar);
+      this.dialogref.close();
     });
   }
 
   saveDetails(selectedAvatar:string){
-
     this.user.avatar = selectedAvatar;
   }
 

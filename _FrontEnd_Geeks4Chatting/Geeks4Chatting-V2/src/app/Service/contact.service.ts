@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { CreateContact, User } from '../Model/user.model';
+import { CreateContact, User, UserProfile } from '../Model/user.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { MessageService } from './message.service';
 import { Message, MessageList } from '../Model/message.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +17,18 @@ export class ContactService {
   private messageListSubject = new BehaviorSubject<MessageList[]>([]);
   messageList$ = this.messageListSubject.asObservable();
 
-  contacts : User[] = [];
+  contacts : UserProfile[] = [];
   
-  constructor(private http : HttpClient , private messageService : MessageService) { 
+  constructor(private http : HttpClient ,
+     private messageService : MessageService,
+     private authService: AuthService) { 
    
   }
 
-  fetchContacts(userId: number): Observable<User[]> {
+  fetchContacts(userId: number): Observable<UserProfile[]> {
     const url = `${this.baseUrl}/get/${userId}/all`;
-    return this.http.get<User[]>(url).pipe(
-      tap((fetchedContacts: User[]) => {
+    return this.http.get<UserProfile[]>(url).pipe(
+      tap((fetchedContacts: UserProfile[]) => {
         console.log("Fetched Contacts:"+this.contacts);
         this.contacts = [...fetchedContacts]; // Use spread operator to create a new list
         this.updateList();
@@ -71,7 +74,8 @@ export class ContactService {
         username: user.username,
         lastestText: lastMessageText.content,
         timestamp: lastMessageText.timestamp, // You may want to set the actual timestamp
-        unread: unread
+        unread: unread,
+        avatar : user.avatar
       };
     });
   
@@ -82,12 +86,11 @@ export class ContactService {
   addNewContactToList(newContact: CreateContact): void {
     const addContactUrl = `${this.baseUrl}/add`;
   
-    this.http.post<User[]>(addContactUrl, newContact).subscribe(
-      (updatedContacts: User[]) => {
+    this.http.post<UserProfile[]>(addContactUrl, newContact).subscribe(
+      (updatedContacts: UserProfile[]) => {
+        console.log("adding ");
         this.contacts = updatedContacts;
-      //  this.messageService.updateList(this.contacts);
-  
-        const newContact: User = this.contacts[this.contacts.length - 1];
+        const newContact: UserProfile = this.contacts[this.contacts.length - 1];
         console.log("New list:", this.contacts);
         this.updateList();
       },
@@ -98,29 +101,16 @@ export class ContactService {
   }
   
 
- 
-  getCurrentUser(): number {
-    const currentUserString = sessionStorage.getItem('currentUser');
 
-    if (currentUserString) {
-      const currentUser: User = JSON.parse(currentUserString);
-      return currentUser.userid;
-    }
-
-    return 0; // or any other default value if user is not found
-  }
-
-
-
-  getContacts(searchTerm: string): Observable<User[]> {
+  getContacts(searchTerm: string): Observable<UserProfile[]> {
     const params = new HttpParams().set('searchTerm', searchTerm);
-    const userId = this.getCurrentUser();
+    const userId = this.authService.getCurrentUser();
     const url = `${this.baseUrl}/${userId}/search`;
-    return this.http.get<User[]>(url, { params });
+    return this.http.get<UserProfile[]>(url, { params });
   }
 
   getconversationid( receiver: number): string{
-     const sender = this.getCurrentUser();
+     const sender = this.authService.getCurrentUser();
     
     if(sender < receiver)
     {
@@ -135,5 +125,30 @@ export class ContactService {
     }
 
   }
+
+  // getAvatarByUserId(userIdParam: number): string | undefined {
+  //   console.log("getting avaratr for : " + userIdParam);
+  //   const matchingContact = this.contacts.find(contact => contact.userid === userIdParam);
+  //   // If a matching contact is found, return its avatar; otherwise, return undefined
+  //   console.log("the avarta is == " + matchingContact);
+  //   return matchingContact?.avatar;
+  // }
+
+  getAvatarByUserId(userIdParam: number): string | undefined {
+    console.log(this.contacts)
+    console.log("getting avatar for: " + userIdParam);
+
+    let matchingAvatar: string | undefined;
+
+    this.contacts.forEach(contact => {
+        if (contact.userid === userIdParam) {
+            matchingAvatar = contact.avatar;
+        }
+    });
+
+    // If a matching contact is found, return its avatar; otherwise, return undefined
+    console.log("the avatar is == " + matchingAvatar);
+    return matchingAvatar;
+}
  
 }

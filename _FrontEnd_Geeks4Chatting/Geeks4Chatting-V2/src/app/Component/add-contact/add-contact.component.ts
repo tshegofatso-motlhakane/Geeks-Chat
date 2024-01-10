@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CreateContact, User } from 'src/app/Model/user.model';
+import { CreateContact, User, UserProfile } from 'src/app/Model/user.model';
 import { ContactService } from 'src/app/Service/contact.service';
 import { WebSocketService } from 'src/app/Service/web-socket.service';
 
@@ -11,7 +11,7 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
 export class AddContactComponent {
 
   searchTerm: string = "";
-  searchResults: User[] = [];
+  searchResults: UserProfile[] = [];
   error: any;
   showEmptyMessage: boolean = false;
 
@@ -38,9 +38,9 @@ private websocketService : WebSocketService){}
     let userid;
     const currentUserString = sessionStorage.getItem('currentUser');
     if (currentUserString) {
-      const currentUser: User = JSON.parse(currentUserString)
+      const currentUser: number = JSON.parse(currentUserString)
       const newContact: CreateContact = {
-        user1: currentUser.userid,
+        user1: currentUser,
         user2: contactid,
       };
 

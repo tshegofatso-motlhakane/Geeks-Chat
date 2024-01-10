@@ -6,6 +6,7 @@ import { Message, MessageStatus } from '../Model/message.model';
 import { MessageService } from './message.service';
 import { ContactService } from './contact.service';
 import { Observable, of } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class WebSocketService {
   constructor(
     private http: HttpClient,
     private contactService: ContactService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService : AuthService
   ) {
     const socket = new SockJS('http://localhost:8080/api/chat'); // Update with your server endpoint
     this.stompClient = Stomp.over(socket);
@@ -55,13 +57,15 @@ export class WebSocketService {
      return of(null); 
   }
 
+
+
   updateMessageStatus(messageId: number) {
     console.log("Step 3");
 
     const baseUrl = 'http://localhost:8080/api/messages';
     const url = `${baseUrl}/updateStatus/${messageId}`;
     
-    this.http.put<string>(url, {}).subscribe(
+    this.http.put<string>(url,{}).subscribe(
         response => {
             console.log("Step 3 response : " + response);
             // Handle the response as needed
@@ -85,6 +89,7 @@ export class WebSocketService {
           console.log("Step 2");
           const parsedMessage: Message = JSON.parse(message.body);
           parsedMessage.status = MessageStatus.Received;
+          console.log("Message Id : " + parsedMessage.messageid);
           this.updateMessageStatus(parsedMessage.messageid);
           this.callupdate(conversationId,parsedMessage);
           this.messageService.addMessage(conversationId, parsedMessage);
@@ -101,6 +106,7 @@ export class WebSocketService {
       const parsedMessage: Message = JSON.parse(message.body);
       console.log('Received message:', parsedMessage);
       parsedMessage.status = MessageStatus.Received;
+      this.updateMessageStatus(parsedMessage.messageid);
       this.messageService.addMessage(conversationId, parsedMessage);
       this.callupdate(conversationId,parsedMessage);
     });
@@ -111,7 +117,7 @@ export class WebSocketService {
     const [user1,user2] = conversation.split('_').map(Number);
     console.log("Step 4 + firstime calling updatelastesMesFOr User");
 
-    if(user1 === this.contactService.getCurrentUser())
+    if(user1 === this.authService.getCurrentUser())
     {
       console.log("Update message 1" );
       this.contactService.updateLatestMessageForUser(user2,message);

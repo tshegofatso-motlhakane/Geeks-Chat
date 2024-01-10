@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message, MessageStatus } from 'src/app/Model/message.model';
-import { User } from 'src/app/Model/user.model';
+import { User, UserProfile } from 'src/app/Model/user.model';
+import { AuthService } from 'src/app/Service/auth.service';
 import { ChatService } from 'src/app/Service/chat.service';
 import { ContactService } from 'src/app/Service/contact.service';
 import { MessageService } from 'src/app/Service/message.service';
@@ -15,22 +16,27 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
 })
 export class ChatThreadComponent implements OnInit {
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
-  currentUser = this.contactService.getCurrentUser();
+  currentUser = this.authService.getCurrentUser();
   messages: Message[] = [];
   conversationId: string = "";
   newMessageContent: string = '';
-  disableScrollDown = false
+  disableScrollDown = false;
+  useravatar: string | null = '';
+  contactavatar: string | undefined= "";
 
   constructor(
     public chatService: ChatService,
-    private contactService: ContactService,
     private messageService: MessageService,
     private websocketService: WebSocketService,
-    private route: ActivatedRoute) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private contactService : ContactService) { }
 
   ngOnInit(): void {
+    
     this.route.params.subscribe((params) => {
       this.conversationId = params['conversationId'];
+     
       // Update messages based on the new conversationId
       this.messageService.getMessagesForConversation(this.conversationId).subscribe((messages) => {
         this.messages = messages;
@@ -39,28 +45,48 @@ export class ChatThreadComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
+    this.getavatars(this.conversationId);
     this.scrollToBottom();
-}
+  }
 
- onScroll() {
+  onScroll() {
     let element = this.myScrollContainer.nativeElement
     let atBottom = element.scrollHeight - element.scrollTop === element.clientHeight
     if (this.disableScrollDown && atBottom) {
-        this.disableScrollDown = false
+      this.disableScrollDown = false
     } else {
-        this.disableScrollDown = true
+      this.disableScrollDown = true
     }
-}
+  }
 
 
-private scrollToBottom(): void {
+  private scrollToBottom(): void {
     if (this.disableScrollDown) {
-        return
+      return
     }
     try {
-        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch(err) { }
-}
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
+
+  getavatars(conversationId: string) {
+    const user: UserProfile | null = this.authService.getCurrentUserInfo();
+
+    if (user) {
+      this.useravatar = user.avatar;
+      console.log("current user " + this.useravatar);
+    }
+
+    const [user1, user2] = conversationId.split('_').map(Number);
+    if (user1 === this.currentUser) {
+        this.contactavatar = this.contactService.getAvatarByUserId(user2);
+        console.log("user 2 : " + this.contactavatar);
+
+    } else {
+      this.contactavatar = this.contactService.getAvatarByUserId(user1);
+      console.log("user 1: " + this.contactavatar);
+    }
+  }
 
   sendMessage(): void {
 
@@ -77,22 +103,8 @@ private scrollToBottom(): void {
       status: MessageStatus.Sent
     };
 
-    const [user1, user2] = this.conversationId.split('_').map(Number);
-
-    // send message through websocket
-    console.log("Step 1");
     this.websocketService.sendMessage(message);
-    // console.log("Step 6");
 
-    // if (user1 === this.currentUser) {
-    //   console.log("Update message 1");
-    //   this.contactService.updateLatestMessageForUser(user2, message);
-    // } else {
-    //   console.log("Update message 1");
-    //   this.contactService.updateLatestMessageForUser(user1, message);
-    // }
-
-    // Clear the input field after sending the message
     this.newMessageContent = '';
   }
 

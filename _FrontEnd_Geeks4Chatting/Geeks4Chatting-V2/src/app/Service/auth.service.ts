@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { User, createUser } from '../Model/user.model';
+import { User, UserProfile, createUser } from '../Model/user.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { ResponseObject } from '../Model/message.model';
 
@@ -43,10 +43,22 @@ export class AuthService {
     const currentUserString = sessionStorage.getItem('currentUser');
 
     if (currentUserString) {
-      const currentUser: User = JSON.parse(currentUserString);
-      return currentUser.userid;
+      let currentUser: number = +currentUserString;
+      return currentUser;
     }
 
     return 0; // or any other default value if user is not found
+  }
+
+  getCurrentUserInfo(): UserProfile | null{
+    const currentUserString = sessionStorage.getItem('userInfo');
+
+    if (currentUserString) {
+      let currentUser: UserProfile = JSON.parse(currentUserString);
+      return currentUser;
+    }
+
+   return null;
+     // or any other default value if user is not found
   }
 }

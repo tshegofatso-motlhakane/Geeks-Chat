@@ -12,13 +12,16 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
 export class ChatComponent implements OnInit  {
 
    
-    private user : number = this.contactService.getCurrentUser()
+    private user : number = this.authService.getCurrentUser();
     constructor(private websocketService : WebSocketService,
      private contactService : ContactService,
-     private messageService : MessageService) {
+     private messageService : MessageService,
+     private authService : AuthService ) {
 
    }
   ngOnInit(): void {
+
+    console.log("this user " + this.authService.getCurrentUser());
     this.websocketService.fetchConversationIds(this.user);
     this.getold();
     

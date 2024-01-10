@@ -12,11 +12,12 @@ export interface createUser {
     
 }
 export interface UserProfile {
-    firstName: string;
-    lastName: string;
+    userid : number;
+    firstname: string;
+    lastname: string;
     email: string;
     username: string;
-    avatar: string; // Assuming the profile picture is a URL
+    avatar: string; 
     bio: string;
   }
 export interface CreateContact{

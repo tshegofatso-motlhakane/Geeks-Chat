@@ -7,10 +7,12 @@
    
     <div class="found-contacts" *ngIf="searchResults && searchResults.length > 0">
         <div class="contact" *ngFor="let user of searchResults">
-            <div class="avatar"></div>
+            <div class="avatar">
+                <img *ngIf="user.avatar  !== null" [src]="user.avatar" [alt]="user.avatar" class="avatar-image">
+            </div>
             <div class="info">
                 <div class="username">{{ user.username }}</div>
-                <div class="description">Web Developer</div>
+                <div class="description">{{ user.bio }}</div>
             </div>
             <button class="add" (click)="addContact(user.userid)" ><mat-icon>add_circle_outline</mat-icon></button>
         </div>

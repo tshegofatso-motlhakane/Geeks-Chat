@@ -5,12 +5,13 @@
 <section class="msger" *ngIf="chatService.selectedUser?.username" >
   <header class="msger-header">
     <div class="msger-header-profile">
-      <div class="profile-pic"></div>
+      <div class="profile-pic">
+        <img *ngIf="chatService.selectedUser !== null" [src]="chatService.selectedUser.avatar" [alt]="chatService.selectedUser.avatar" class="avatar-image">
+
+      </div>
       <p>{{ chatService.selectedUser?.username }}</p>
     </div>
-    <div class="msger-header-options">
-      <span><i class="fas fa-cog"></i></span>
-    </div>
+   
   </header>
 
   <main class="msger-chat"  #scrollMe (scroll)="onScroll()" >
@@ -19,7 +20,11 @@
 
       <div class="msg-bubble">
         <div class="msg-info">
-          <div class="msg-info-name">{{ message.sender }}</div>
+          <div class="msg-info-name">
+            <img *ngIf="message.sender === currentUser" [src]="useravatar" [alt]="useravatar" class="avatar-image-bubble">
+            <!-- Display contact avatar for left messages -->
+            <img *ngIf="message.sender !== currentUser" [src]="contactavatar" [alt]="contactavatar" class="avatar-image-bubble">
+          </div>
           <div class="msg-info-time">{{ message.timestamp | date:'HH:mm' }}</div>
         </div>
 
