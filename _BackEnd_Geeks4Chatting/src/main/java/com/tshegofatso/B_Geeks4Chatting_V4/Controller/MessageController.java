@@ -73,11 +73,11 @@ public class MessageController {
 
 
 
-    @GetMapping("api/messages/{conversationId}")
-    public List<Message> getMessages(@PathVariable String conversationId) {
-        // Retrieve messages for the specified conversation from the database
-        return messageRepository.findByConversationId(conversationId);
-    }
+//    @GetMapping("api/messages/{conversationId}")
+//    public List<Message> getMessages(@PathVariable String conversationId) {
+//        // Retrieve messages for the specified conversation from the database
+//        return messageRepository.findByConversationId(conversationId);
+//    }
 
     @GetMapping("api/messages/{userid}/oldMessages")
     public List<Message> getOldMessages(@PathVariable int userid) {

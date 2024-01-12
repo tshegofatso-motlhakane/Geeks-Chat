@@ -25,13 +25,24 @@ public interface MessageRepository extends JpaRepository<Message , Integer> {
             "WHERE sender = :userId)", nativeQuery = true)
     List<Message> findMessagesForUser(@Param("userId") int userId);
 
+//    @Query(value = "SELECT * FROM messages " +
+//            "WHERE sender = :userId " +
+//            "OR conversation_id IN (SELECT DISTINCT conversation_id FROM messages " +
+//            "WHERE conversation_id LIKE %:pattern1 OR conversation_id LIKE :pattern2)",
+//            nativeQuery = true)
+//    List<Message> findMessagesByUserId(@Param("userId") int userId,
+//                                       @Param("pattern1") String pattern1,
+//                                       @Param("pattern2") String pattern2);
+
     @Query(value = "SELECT * FROM messages " +
             "WHERE sender = :userId " +
             "OR conversation_id IN (SELECT DISTINCT conversation_id FROM messages " +
-            "WHERE conversation_id LIKE %:pattern1 OR conversation_id LIKE :pattern2)",
+            "WHERE conversation_id LIKE %:pattern1 OR conversation_id LIKE :pattern2) " +
+            "ORDER BY timestamp", // Add this ORDER BY clause
             nativeQuery = true)
     List<Message> findMessagesByUserId(@Param("userId") int userId,
                                        @Param("pattern1") String pattern1,
                                        @Param("pattern2") String pattern2);
+
 
 }
