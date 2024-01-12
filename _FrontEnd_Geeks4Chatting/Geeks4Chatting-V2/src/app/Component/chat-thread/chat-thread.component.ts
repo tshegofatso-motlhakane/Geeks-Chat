@@ -42,9 +42,12 @@ export class ChatThreadComponent implements OnInit {
         this.messages = messages;
       });
     });
+    this.scrollToBottom();
+
   }
 
   ngAfterViewChecked() {
+    if(this.conversationId !== '')
     this.getavatars(this.conversationId);
     this.scrollToBottom();
   }
@@ -74,17 +77,15 @@ export class ChatThreadComponent implements OnInit {
 
     if (user) {
       this.useravatar = user.avatar;
-      console.log("current user " + this.useravatar);
     }
 
     const [user1, user2] = conversationId.split('_').map(Number);
     if (user1 === this.currentUser) {
         this.contactavatar = this.contactService.getAvatarByUserId(user2);
-        console.log("user 2 : " + this.contactavatar);
+      
 
     } else {
       this.contactavatar = this.contactService.getAvatarByUserId(user1);
-      console.log("user 1: " + this.contactavatar);
     }
   }
 
@@ -104,11 +105,28 @@ export class ChatThreadComponent implements OnInit {
     };
 
     this.websocketService.sendMessage(message);
+    this.scrollToBottom();
 
     this.newMessageContent = '';
   }
 
-
+  
+  groupMessagesByDay(messages: Message[]): any[] {
+    const groupedMessages: any[] = [];
+  
+    messages.forEach((message) => {
+      const messageDate = new Date(message.timestamp).toDateString();
+      const existingGroup = groupedMessages.find((group) => group.date === messageDate);
+  
+      if (existingGroup) {
+        existingGroup.messages.push(message);
+      } else {
+        groupedMessages.push({ date: messageDate, messages: [message] });
+      }
+    });
+  
+    return groupedMessages;
+  }
 }
 
 

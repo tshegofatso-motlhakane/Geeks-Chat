@@ -17,11 +17,11 @@ import { tap } from 'rxjs';
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.scss']
 })
-export class ChatListComponent implements OnInit  {
+export class ChatListComponent implements OnInit {
   messagelist: MessageList[] = [];
   Users: UserProfile[] = [];
-  CurrentUser : String ="";
-  avatar : String = "";
+  CurrentUser: String = "";
+  avatar: String = "";
   searchUsername: string = '';
   filteredMessagelist: MessageList[] = [];
 
@@ -30,10 +30,10 @@ export class ChatListComponent implements OnInit  {
     private router: Router,
     private dialog: MatDialog,
     public contactService: ContactService,
-    public chatService : ChatService,
-    private messageService : MessageService,
-  ) {}
- 
+    public chatService: ChatService,
+    private messageService: MessageService,
+  ) { }
+
   ngOnInit(): void {
     this.fetchContacts();
     this.Users = this.contactService.contacts;
@@ -42,9 +42,9 @@ export class ChatListComponent implements OnInit  {
       this.filteredMessagelist = this.messagelist;
 
     });
-   
+
     this.updateCurrentUsr();
-    
+
   }
 
   onSearchChange(): void {
@@ -55,7 +55,7 @@ export class ChatListComponent implements OnInit  {
     return contacts.filter(contact => contact.username.toLowerCase().includes(searchTerm.toLowerCase()));
   }
 
-  updateCurrentUsr(){
+  updateCurrentUsr() {
     const currentUserString = sessionStorage.getItem('userInfo');
 
     if (currentUserString) {
@@ -65,9 +65,9 @@ export class ChatListComponent implements OnInit  {
     }
 
   }
-  
+
   fetchContacts(): void {
-    const userId : number = this.authService.getCurrentUser(); // Get the actual user ID
+    const userId: number = this.authService.getCurrentUser(); // Get the actual user ID
     this.contactService.fetchContacts(userId).subscribe(
       (fetchedContacts: UserProfile[]) => {
         this.Users = fetchedContacts;
@@ -84,29 +84,28 @@ export class ChatListComponent implements OnInit  {
 
     this.Users = this.contactService.contacts;
   }
- 
+
   selectUser(selectedUser: MessageList) {
     this.getContacts();
     console.log("selected " + selectedUser.username);
-  
+
     // Find the user in the names2 array based on the user ID
     const selected = this.Users.find(user => user.userid === selectedUser.userid);
     const conv = this.contactService.getconversationid(selectedUser.userid);
     if (selected) {
       // Set the selected user in the chatService
       this.chatService.selectedUser = selected;
-     const number = this.messageService.countReceivedMessages(conv);
+      const number = this.messageService.countReceivedMessages(conv);
       this.messagelist = this.messagelist.map(message => {
         if (message.userid === selected.userid) {
-          if(number > 0)
-          {
+          if (number > 0) {
             message.unread = 0; // Update unread count for the selected user
           }
-          }
+        }
         return message;
       });
       // Get the conversation ID and navigate to the chat
-     
+
       this.messageService.updateMessageStatus(conv).pipe(
         tap(() => {
           // Perform side effects here
@@ -133,11 +132,11 @@ export class ChatListComponent implements OnInit  {
     });
     dialogRef.afterClosed().subscribe(result => {
 
-  
+
     });
   }
-  
-  
+
+
   openProfileDialog(): void {
     const dialogRef = this.dialog.open(ProfileComponent, {
       panelClass: 'custom-dialog-container', // Add a custom class to the dialog container
@@ -151,7 +150,7 @@ export class ChatListComponent implements OnInit  {
       localStorage.clear();
       this.messageService.clearMessages();
       this.contactService.contacts = [];
-    //  this.contactService.clearContactList();
+      //  this.contactService.clearContactList();
       this.router.navigate(['/login']);
     } else {
       console.log("failed to log out");

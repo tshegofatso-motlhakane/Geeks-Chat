@@ -35,7 +35,6 @@ private websocketService : WebSocketService){}
   }
   
   addContact(contactid: number) {
-    let userid;
     const currentUserString = sessionStorage.getItem('currentUser');
     if (currentUserString) {
       const currentUser: number = JSON.parse(currentUserString)

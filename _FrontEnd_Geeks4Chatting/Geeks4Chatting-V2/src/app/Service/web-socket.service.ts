@@ -84,15 +84,18 @@ export class WebSocketService {
     {
       this.conversationIds.forEach((conversationId) => {
         const destination = `/topic/messages/${conversationId}`;
-        console.log('Subscribing to ' + destination);
+    
         this.stompClient.subscribe(destination, (message) => {
-          console.log("Step 2");
+
+
           const parsedMessage: Message = JSON.parse(message.body);
           parsedMessage.status = MessageStatus.Received;
-          console.log("Message Id : " + parsedMessage.messageid);
+       
           this.updateMessageStatus(parsedMessage.messageid);
           this.callupdate(conversationId,parsedMessage);
           this.messageService.addMessage(conversationId, parsedMessage);
+
+          
         });
       });
     }

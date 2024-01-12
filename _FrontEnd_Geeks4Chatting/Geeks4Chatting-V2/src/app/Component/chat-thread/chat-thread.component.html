@@ -16,23 +16,24 @@
 
   <main class="msger-chat"  #scrollMe (scroll)="onScroll()" >
 
-    <div *ngFor="let message of messages" class="msg" [ngClass]="{ 'left-msg': message.sender !== currentUser, 'right-msg': message.sender === currentUser}">
-
-      <div class="msg-bubble">
-        <div class="msg-info">
-          <div class="msg-info-name">
-            <img *ngIf="message.sender === currentUser" [src]="useravatar" [alt]="useravatar" class="avatar-image-bubble">
-            <!-- Display contact avatar for left messages -->
-            <img *ngIf="message.sender !== currentUser" [src]="contactavatar" [alt]="contactavatar" class="avatar-image-bubble">
+    <ng-container *ngFor="let group of groupMessagesByDay(messages)">
+      <div class="divider">{{ group.date }}</div>
+      <div *ngFor="let message of group.messages" class="msg" [ngClass]="{ 'left-msg': message.sender !== currentUser, 'right-msg': message.sender === currentUser}">
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">
+              <img *ngIf="message.sender === currentUser" [src]="useravatar" [alt]="useravatar" class="avatar-image-bubble">
+              <!-- Display contact avatar for left messages -->
+              <img *ngIf="message.sender !== currentUser" [src]="contactavatar" [alt]="contactavatar" class="avatar-image-bubble">
+            </div>
+            <div class="msg-info-time">{{ message.timestamp | date:'HH:mm' }}</div>
           </div>
-          <div class="msg-info-time">{{ message.timestamp | date:'HH:mm' }}</div>
-        </div>
-
-        <div class="msg-text">
-          {{ message.content }}
+          <div class="msg-text">
+            {{ message.content }}
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </main>
 
   <form class="msger-inputarea" (ngSubmit)="sendMessage()">

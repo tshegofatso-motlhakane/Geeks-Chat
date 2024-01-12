@@ -62,6 +62,8 @@
     margin-right: 5px;
     padding: 2px;
     background-color: rgb(178, 196, 197);
+    box-shadow: 2px 2px 2px #AEB7C0, 
+    -5px -5px 10px #ffffff73;
   }
 
   
@@ -74,12 +76,15 @@
   .avatar-image-bubble{
     width: 100%;
     height: 100%;
+    
   }
   
    .msg-info-name{
      width: 25px;
      height: 25px;
      background-color: rgb(178, 196, 197);
+     box-shadow: 2px 2px 2px #AEB7C0, 
+     -5px -5px 10px #ffffff73;
      border-radius: 20%;
    }
 
@@ -194,4 +199,19 @@
   .scroll-down {
     overflow-y: auto;
     max-height: 300px; // Adjust the max height as needed
+  }
+
+  .divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 40%;
+    text-align: center;
+    padding: 5px;
+    width: 150px;
+    border-radius: 13px;
+    background-color: #dde1e7;
+    box-shadow: 2px 2px 5px #BABECC,
+             -5px -5px 10px #ffffff73;
+    font-weight: bold;
+    color: #595959;
   }

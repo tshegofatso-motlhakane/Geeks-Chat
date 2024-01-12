@@ -131,6 +131,7 @@ body{
 
   
   .contact-box {
+    height: 5vh;
     display: flex;
     align-items: center;
     padding: 10px;
@@ -145,20 +146,31 @@ body{
   }
 
   .unread {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #B2C4C5;
-    margin-left: 10vh;
+    
+    width: 10%; 
+    height: 5vh;
+    margin-left: 10px;
     display: flex;
-    align-items: center; /* Align vertically */
-    justify-content: center; /* Align horizontally */
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: column;
   }
   
-  .unread p {
+  .unread {
     color: #1a1a1a;
-    font-size: 15px;
-    margin: 0; /* Remove default margin from <p> element */
+    font-size: 13px;
+    padding: 0px; 
+    margin: 0;/* Remove default margin from <p> element */
+  }
+
+  .number {
+    color: #e2e2e2;
+    width: 50%;
+    background-color: #595959;
+    text-align: center;
+    border-radius: 50%;
+    margin-top: 2px;
+   /* Remove default margin from <p> element */
   }
   
   .contact-name{
@@ -169,12 +181,13 @@ body{
   .contact-message-preview{
     font-size: 14px;
     color: #1a1a1a;
+    width: 80%;
   }
   
   
   
   .contact-box.selected {
-    background-color: #5f5f5f73; /* or any other style you want for the selected contact */
+    background-color: #aaaaaa73; /* or any other style you want for the selected contact */
     transform: scale(1.03);
   }
   .contact-box:hover {
@@ -182,10 +195,13 @@ body{
   }
   
   .contact-avatar {
-    width: 40px;
+    width: 15%;
     height: 40px;
     border-radius: 25%;
-    background-color: rgb(178, 196, 197);
+     background-color: rgb(178, 196, 197);
+
+    box-shadow: 2px 2px 2px #AEB7C0, 
+    -5px -5px 10px #ffffff73;
     margin-right: 10px;
     padding: 2px;
   }
@@ -195,17 +211,20 @@ body{
     height: 100%;
   }
 
-  .avatar-image-bubble{
-    width: 100%;
-    height: 100%;
-  }
+  
   
   .contact-info {
-    flex: 1;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    width: 70%;
+    height: 5vh;
   }
   
   .contact-name {
     font-weight: bold;
+    width: 80%;
+    height: 2vh;
   }
   
   

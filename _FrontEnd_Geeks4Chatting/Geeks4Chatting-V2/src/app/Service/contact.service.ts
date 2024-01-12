@@ -126,29 +126,13 @@ export class ContactService {
 
   }
 
-  // getAvatarByUserId(userIdParam: number): string | undefined {
-  //   console.log("getting avaratr for : " + userIdParam);
-  //   const matchingContact = this.contacts.find(contact => contact.userid === userIdParam);
-  //   // If a matching contact is found, return its avatar; otherwise, return undefined
-  //   console.log("the avarta is == " + matchingContact);
-  //   return matchingContact?.avatar;
-  // }
-
   getAvatarByUserId(userIdParam: number): string | undefined {
-    console.log(this.contacts)
-    console.log("getting avatar for: " + userIdParam);
-
-    let matchingAvatar: string | undefined;
-
-    this.contacts.forEach(contact => {
-        if (contact.userid === userIdParam) {
-            matchingAvatar = contact.avatar;
-        }
-    });
-
+   
+    const matchingContact = this.contacts.find(contact => contact.userid === userIdParam);
     // If a matching contact is found, return its avatar; otherwise, return undefined
-    console.log("the avatar is == " + matchingAvatar);
-    return matchingAvatar;
-}
+    return matchingContact?.avatar;
+  }
+
+  
  
 }
