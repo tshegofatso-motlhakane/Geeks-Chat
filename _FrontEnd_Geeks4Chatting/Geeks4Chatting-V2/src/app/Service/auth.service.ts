@@ -39,21 +39,29 @@ export class AuthService {
     return this.isAuth;
   }
 
-  getCurrentUser(): number {
-    const currentUserString = sessionStorage.getItem('currentUser');
+ 
 
-    if (currentUserString) {
-      let currentUser: number = +currentUserString;
-      return currentUser;
-    }
+  setCurrentUserInfo(response : any) {
 
-    return 0; // or any other default value if user is not found
+    const user: UserProfile = {
+      userid : response.data.userid,
+      firstname: response.data.firstname || '',  // If response.data.firstname is null or undefined, use an empty string
+      lastname: response.data.lastname || '',
+      email: response.data.email || '',
+      username: response.data.username || '',
+      avatar: response.data.avatar || '',
+      bio: response.data.bio || ''
+    };
+    sessionStorage.setItem("currentUser",JSON.stringify(user));
+
   }
 
   getCurrentUserInfo(): UserProfile | null{
-    const currentUserString = sessionStorage.getItem('userInfo');
+    const currentUserString = sessionStorage.getItem('currentUser');
+
 
     if (currentUserString) {
+     
       let currentUser: UserProfile = JSON.parse(currentUserString);
       return currentUser;
     }

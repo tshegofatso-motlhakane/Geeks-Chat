@@ -29,7 +29,6 @@ export class ContactService {
     const url = `${this.baseUrl}/get/${userId}/all`;
     return this.http.get<UserProfile[]>(url).pipe(
       tap((fetchedContacts: UserProfile[]) => {
-        console.log("Fetched Contacts:"+this.contacts);
         this.contacts = [...fetchedContacts]; // Use spread operator to create a new list
         this.updateList();
       }),
@@ -43,14 +42,11 @@ export class ContactService {
   
   updateLatestMessageForUser(userId: number, updatedMessage: Message) {
     const currentList = this.messageListSubject.getValue();
-    console.log('Current List:', currentList);
       let unread: number = 0;
       let conv = this.getconversationid(userId);
       unread = this.messageService.countReceivedMessages(conv);
-      console.log("ureadin updatelatest : " + unread);
     const updatedList = currentList.map(message => {
       if (message.userid === userId) {
-        console.log('Updating Message:', message);
         message.lastestText = updatedMessage.content;
         message.timestamp = updatedMessage.timestamp;
         message.unread = unread;
@@ -58,7 +54,6 @@ export class ContactService {
       return message;
     });
   
-    console.log('Updated List:', updatedList);
     this.messageListSubject.next(updatedList);
   }
 
@@ -68,7 +63,6 @@ export class ContactService {
       const lastMessageText = this.messageService.getLastMessageText(conversationId);
       let unread: number = 0;
       unread = this.messageService.countReceivedMessages(conversationId);
-      console.log("uread in updatelist : " + unread);
       return {
         userid: user.userid,
         username: user.username,
@@ -88,10 +82,8 @@ export class ContactService {
   
     this.http.post<UserProfile[]>(addContactUrl, newContact).subscribe(
       (updatedContacts: UserProfile[]) => {
-        console.log("adding ");
         this.contacts = updatedContacts;
         const newContact: UserProfile = this.contacts[this.contacts.length - 1];
-        console.log("New list:", this.contacts);
         this.updateList();
       },
       (error) => {
@@ -104,31 +96,38 @@ export class ContactService {
 
   getContacts(searchTerm: string): Observable<UserProfile[]> {
     const params = new HttpParams().set('searchTerm', searchTerm);
-    const userId = this.authService.getCurrentUser();
+    const userId = this.authService.getCurrentUserInfo()?.userid;
     const url = `${this.baseUrl}/${userId}/search`;
     return this.http.get<UserProfile[]>(url, { params });
   }
 
   getconversationid( receiver: number): string{
-     const sender = this.authService.getCurrentUser();
+     const sender = this.authService.getCurrentUserInfo();
     
-    if(sender < receiver)
+   if(sender)
+   {
+    if(sender.userid < receiver)
     {
-      return sender+"_"+receiver;
+      return sender.userid+"_"+receiver;
     }else
-    if(sender > receiver)
+    if(sender.userid > receiver)
     {
-      return receiver+"_"+sender;
+      return receiver+"_"+sender.userid;
     }else
     {
       return "ubnormal chatid";
     }
+   }else
+   {
+    return 'user not logged in';
+   }
 
   }
 
   getAvatarByUserId(userIdParam: number): string | undefined {
-   
+    console.log(this.contacts);
     const matchingContact = this.contacts.find(contact => contact.userid === userIdParam);
+    console.log(matchingContact);
     // If a matching contact is found, return its avatar; otherwise, return undefined
     return matchingContact?.avatar;
   }

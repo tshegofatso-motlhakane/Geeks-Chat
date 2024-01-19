@@ -47,9 +47,8 @@ export class RegisterComponent {
        (response) => {
           if(response.data != null)
           {
-             console.log(response.message);
-             console.log(response.data);
-             sessionStorage.setItem('currentUser', JSON.stringify(response.data));
+           
+             this.authService.setCurrentUserInfo(response);
              this.router.navigate(['/chat']);
           }else{
             console.log("ERROR : " + response.status +" => "+response.message);

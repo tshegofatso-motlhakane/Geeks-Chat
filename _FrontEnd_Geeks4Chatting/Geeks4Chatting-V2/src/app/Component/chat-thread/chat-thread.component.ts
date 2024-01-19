@@ -16,7 +16,7 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
 })
 export class ChatThreadComponent implements OnInit {
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
-  currentUser = this.authService.getCurrentUser();
+  currentUser : UserProfile | null = this.authService.getCurrentUserInfo();
   messages: Message[] = [];
   conversationId: string = "";
   newMessageContent: string = '';
@@ -39,17 +39,15 @@ export class ChatThreadComponent implements OnInit {
      
       // Update messages based on the new conversationId
       this.messageService.getMessagesForConversation(this.conversationId).subscribe((messages) => {
+       
         this.messages = messages;
+        this.scrollToBottom();
       });
+     
     });
-    this.scrollToBottom();
-
-  }
-
-  ngAfterViewChecked() {
-    if(this.conversationId !== '')
+   
     this.getavatars(this.conversationId);
-    this.scrollToBottom();
+   
   }
 
   onScroll() {
@@ -77,16 +75,17 @@ export class ChatThreadComponent implements OnInit {
 
     if (user) {
       this.useravatar = user.avatar;
-    }
-
-    const [user1, user2] = conversationId.split('_').map(Number);
-    if (user1 === this.currentUser) {
-        this.contactavatar = this.contactService.getAvatarByUserId(user2);
       
-
+    }
+    const [user1, user2] = this.conversationId.split('_').map(Number);
+    
+    if (user1 === this.currentUser?.userid) {
+        this.contactavatar = this.contactService.getAvatarByUserId(user2);
+       
     } else {
       this.contactavatar = this.contactService.getAvatarByUserId(user1);
     }
+    
   }
 
   sendMessage(): void {
@@ -95,9 +94,11 @@ export class ChatThreadComponent implements OnInit {
       return;
     }
 
+   if(this.currentUser)
+   {
     const message: Message = {
       messageid: 0,
-      sender: this.currentUser, // Replace with the actual sender
+      sender: this.currentUser.userid, // Replace with the actual sender
       content: this.newMessageContent,
       conversationId: this.conversationId,
       timestamp: new Date(),
@@ -108,6 +109,7 @@ export class ChatThreadComponent implements OnInit {
     this.scrollToBottom();
 
     this.newMessageContent = '';
+   }
   }
 
   

@@ -31,7 +31,7 @@ export class ChatListComponent implements OnInit {
     private dialog: MatDialog,
     public contactService: ContactService,
     public chatService: ChatService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -56,18 +56,19 @@ export class ChatListComponent implements OnInit {
   }
 
   updateCurrentUsr() {
-    const currentUserString = sessionStorage.getItem('userInfo');
+    const currentUserString = this.authService.getCurrentUserInfo();
 
     if (currentUserString) {
-      const currentUser: UserProfile = JSON.parse(currentUserString);
-      this.CurrentUser = currentUser.username;
-      this.avatar = currentUser.avatar;
+      ;
+      this.CurrentUser = currentUserString.username;
+      this.avatar = currentUserString.avatar;
     }
 
   }
 
   fetchContacts(): void {
-    const userId: number = this.authService.getCurrentUser(); // Get the actual user ID
+    const userId: number | undefined = this.authService.getCurrentUserInfo()?.userid;
+    if(userId)
     this.contactService.fetchContacts(userId).subscribe(
       (fetchedContacts: UserProfile[]) => {
         this.Users = fetchedContacts;
@@ -147,7 +148,7 @@ export class ChatListComponent implements OnInit {
 
   logout(): void {
     if (this.authService.logout()) {
-      localStorage.clear();
+    //  localStorage.clear();
       this.messageService.clearMessages();
       this.contactService.contacts = [];
       //  this.contactService.clearContactList();

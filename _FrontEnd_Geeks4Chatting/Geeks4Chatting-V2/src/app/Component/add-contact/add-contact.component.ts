@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CreateContact, User, UserProfile } from 'src/app/Model/user.model';
+import { AuthService } from 'src/app/Service/auth.service';
 import { ContactService } from 'src/app/Service/contact.service';
 import { WebSocketService } from 'src/app/Service/web-socket.service';
 
@@ -18,7 +19,8 @@ export class AddContactComponent {
 
   constructor(
     private contactService: ContactService,
-private websocketService : WebSocketService){}
+private websocketService : WebSocketService,
+private authService : AuthService){}
   //Method retrieves user using a key word given by the user
   searchUsers() {
     this.contactService.getContacts(this.searchTerm).subscribe(
@@ -35,9 +37,10 @@ private websocketService : WebSocketService){}
   }
   
   addContact(contactid: number) {
-    const currentUserString = sessionStorage.getItem('currentUser');
+    const currentUserString : UserProfile | null = this.authService.getCurrentUserInfo();
     if (currentUserString) {
-      const currentUser: number = JSON.parse(currentUserString)
+      console.log(currentUserString);
+      const currentUser: number = currentUserString.userid;
       const newContact: CreateContact = {
         user1: currentUser,
         user2: contactid,

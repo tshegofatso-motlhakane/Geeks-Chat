@@ -18,13 +18,13 @@
 
     <ng-container *ngFor="let group of groupMessagesByDay(messages)">
       <div class="divider">{{ group.date }}</div>
-      <div *ngFor="let message of group.messages" class="msg" [ngClass]="{ 'left-msg': message.sender !== currentUser, 'right-msg': message.sender === currentUser}">
+      <div *ngFor="let message of group.messages" class="msg" [ngClass]="{ 'left-msg': message.sender !== currentUser?.userid, 'right-msg': message.sender === currentUser?.userid}">
         <div class="msg-bubble">
           <div class="msg-info">
             <div class="msg-info-name">
-              <img *ngIf="message.sender === currentUser" [src]="useravatar" [alt]="useravatar" class="avatar-image-bubble">
+              <img *ngIf="message.sender === currentUser?.userid" [src]="useravatar" [alt]="useravatar" class="avatar-image-bubble">
               <!-- Display contact avatar for left messages -->
-              <img *ngIf="message.sender !== currentUser" [src]="contactavatar" [alt]="contactavatar" class="avatar-image-bubble">
+              <img *ngIf="message.sender !== currentUser?.userid" [src]="contactavatar" [alt]="contactavatar" class="avatar-image-bubble">
             </div>
             <div class="msg-info-time">{{ message.timestamp | date:'HH:mm' }}</div>
           </div>

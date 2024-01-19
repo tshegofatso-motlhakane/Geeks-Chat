@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Message, MessageStatus } from '../Model/message.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { UserProfile } from '../Model/user.model';
 
 
 @Injectable({
@@ -11,6 +12,7 @@ import { AuthService } from './auth.service';
 export class MessageService {
 
   private conversations: { [key: string]: BehaviorSubject<Message[]> } = {};
+  private currentUser : UserProfile | null = this.authService.getCurrentUserInfo();
 
   private baseUrl = 'http://localhost:8080/api/messages';
 
@@ -28,7 +30,6 @@ export class MessageService {
 
 
   addMessage(conversationId: string, message: Message): void {
-    console.log("Step 5 + must increment unread I think");
 
     if (!this.conversations[conversationId]) {
       this.conversations[conversationId] = new BehaviorSubject<Message[]>([]);
@@ -65,7 +66,6 @@ export class MessageService {
   getOldMessages(userId: number): Observable<Message[]> {
     this.clearMessages();
     const url = `${this.baseUrl}/${userId}/oldMessages`;
-    console.log(" trying to get old chats");
     return this.http.get<Message[]>(url).pipe(
       tap(messages => {
 
@@ -118,7 +118,7 @@ export class MessageService {
   getReceivedMessagesCount2(conversationId: string): Observable<number> {
     return this.getMessagesForConversation(conversationId).pipe(
       map(messages => {
-        const currentUser : number = this.authService.getCurrentUser(); // Replace with actual method
+        const currentUser : number | undefined = this.authService.getCurrentUserInfo()?.userid; // Replace with actual method
         return messages.filter(
           message => message.status === MessageStatus.Received && message.sender !== currentUser
         ).length;
@@ -127,9 +127,8 @@ export class MessageService {
   }
 
   countReceivedMessages(conversationId: string): number {
-    console.log("updating status mowwwwwwwwww");
     const conversation = this.conversations[conversationId]?.value || [];
-    const currentUser : number = this.authService.getCurrentUser();
+    const currentUser : number | undefined = this.authService.getCurrentUserInfo()?.userid; // Replace with actual method
     return conversation.reduce((count, message) => {
       if (message.status === MessageStatus.Received && message.sender !== currentUser) {
         return count + 1;

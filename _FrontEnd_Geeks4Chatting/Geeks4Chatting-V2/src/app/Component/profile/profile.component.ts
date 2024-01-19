@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { User, UserProfile } from 'src/app/Model/user.model';
 import { ProfileAvatarsComponent } from '../profile-avatars/profile-avatars.component';
 import { ChatService } from 'src/app/Service/chat.service';
+import { AuthService } from 'src/app/Service/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,8 @@ export class ProfileComponent implements OnInit {
   user!: UserProfile;
   private dialogref : any;
   constructor( private dialog: MatDialog,
-    private chatService: ChatService){
+    private chatService: ChatService,
+    private authService : AuthService){
 
   }
   ngOnInit(): void {
@@ -25,22 +27,20 @@ export class ProfileComponent implements OnInit {
   
    SetUserInfo() {
     if (sessionStorage.getItem("userInfo")) {
-      const currentUserString = sessionStorage.getItem('userInfo');
-
+      const currentUserString : UserProfile | null = this.authService.getCurrentUserInfo();
       if (currentUserString) {
-        const currentUser: UserProfile = JSON.parse(currentUserString);
-        console.log("current niggah : " + currentUser);
-        this.user = currentUser;
+  
+        this.user = currentUserString;
       }
     }
   }
 
   onSubmit() {
     
-   sessionStorage.setItem("userInfo",JSON.stringify(this.user));
-   this.SetUserInfo();
+  //  sessionStorage.setItem("userInfo",JSON.stringify(this.user));
+  //  this.SetUserInfo();
 
-   this.chatService.updateUserInfo(this.user);
+    this.chatService.updateUserInfo(this.user);
 
     console.log('User details updated:', this.user);
   }

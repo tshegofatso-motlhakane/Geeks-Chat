@@ -32,7 +32,7 @@ export class WebSocketService {
     });
 
     this.stompClient.debug = (message) => {
-      console.log(message);
+    //  console.log(message);
     };
   }
 
@@ -41,7 +41,7 @@ export class WebSocketService {
 
     this.http.get<string[]>(url).subscribe(
       (data) => {
-        console.log('Conversation IDs:', data);
+       // console.log('Conversation IDs:', data);
         this.conversationIds = data; // Store the response in the array
         // Subscribe to conversations once IDs are fetched
       },
@@ -60,15 +60,13 @@ export class WebSocketService {
 
 
   updateMessageStatus(messageId: number) {
-    console.log("Step 3");
 
     const baseUrl = 'http://localhost:8080/api/messages';
     const url = `${baseUrl}/updateStatus/${messageId}`;
     
     this.http.put<string>(url,{}).subscribe(
         response => {
-            console.log("Step 3 response : " + response);
-            // Handle the response as needed
+           
         },
         error => {
             console.error(error);
@@ -79,7 +77,6 @@ export class WebSocketService {
 
 
   subscribeToConversations(): void {
-    console.log(this.conversationIds);
     if(this.conversationIds)
     {
       this.conversationIds.forEach((conversationId) => {
@@ -104,10 +101,10 @@ export class WebSocketService {
 
   subscribeToConversation(conversationId: string): void {
     const destination = `/topic/messages/${conversationId}`;
-    console.log('new Subscribing to ' + destination);
+  //  console.log('new Subscribing to ' + destination);
     const subscription = this.stompClient.subscribe(destination, (message) => {
       const parsedMessage: Message = JSON.parse(message.body);
-      console.log('Received message:', parsedMessage);
+    //  console.log('Received message:', parsedMessage);
       parsedMessage.status = MessageStatus.Received;
       this.updateMessageStatus(parsedMessage.messageid);
       this.messageService.addMessage(conversationId, parsedMessage);
@@ -118,15 +115,12 @@ export class WebSocketService {
 
   callupdate(conversation : string , message : Message){
     const [user1,user2] = conversation.split('_').map(Number);
-    console.log("Step 4 + firstime calling updatelastesMesFOr User");
 
-    if(user1 === this.authService.getCurrentUser())
+    if(user1 === this.authService.getCurrentUserInfo()?.userid)
     {
-      console.log("Update message 1" );
       this.contactService.updateLatestMessageForUser(user2,message);
     }else
     {
-      console.log("Update message 2" );
       this.contactService.updateLatestMessageForUser(user1,message);
     }
   }

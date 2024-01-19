@@ -4,14 +4,14 @@ import { RegisterComponent } from './Component/register/register.component';
 import { LoginComponent } from './Component/login/login.component';
 import { ChatComponent } from './Component/chat/chat.component';
 import { authGuard } from './Guard/auth.guard';
-import { ProfileComponent } from './Component/profile/profile.component';
+import { logInGaurdGuard } from './Guard/log-in-gaurd.guard';
 
 const routes: Routes = [
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent, canActivate :[logInGaurdGuard] },
+  { path: 'login', component: LoginComponent , canActivate :[logInGaurdGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
-  { path: 'chat/:conversationId', component: ChatComponent, canActivate: [authGuard] }
+  { path: 'chat', component: ChatComponent , canActivate: [authGuard] },
+  { path: 'chat/:conversationId', component: ChatComponent , canActivate: [authGuard]}
 ];
 
 @NgModule({

@@ -19,8 +19,7 @@ export class ChatService {
   }
 
   updateUserInfo(user : UserProfile){
-    const userId = this.authService.getCurrentUser();
-    console.log("Updating " + userId);
+    const userId = this.authService.getCurrentUserInfo();
     const addContactUrl = `${this.baseUrl}/${userId}/update`;
   
     this.http.put<ResponseObject<any>>(addContactUrl, user).subscribe(

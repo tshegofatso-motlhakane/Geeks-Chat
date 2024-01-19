@@ -1,4 +1,5 @@
 import {  AfterViewInit, Component, OnInit } from '@angular/core';
+import { UserProfile } from 'src/app/Model/user.model';
 import { AuthService } from 'src/app/Service/auth.service';
 import { ContactService } from 'src/app/Service/contact.service';
 import { MessageService } from 'src/app/Service/message.service';
@@ -12,7 +13,7 @@ import { WebSocketService } from 'src/app/Service/web-socket.service';
 export class ChatComponent implements OnInit  {
 
    
-    private user : number = this.authService.getCurrentUser();
+    private user : UserProfile | null = this.authService.getCurrentUserInfo();
     constructor(private websocketService : WebSocketService,
      private contactService : ContactService,
      private messageService : MessageService,
@@ -21,14 +22,15 @@ export class ChatComponent implements OnInit  {
    }
   ngOnInit(): void {
 
-    console.log("this user " + this.authService.getCurrentUser());
-    this.websocketService.fetchConversationIds(this.user);
+    if(this.user)
+    this.websocketService.fetchConversationIds(this.user.userid);
     this.getold();
     
   }
 
   getold() {
-        this.messageService.getOldMessages(this.user).subscribe(
+    if(this.user)
+        this.messageService.getOldMessages(this.user.userid).subscribe(
           () => {
            this.contactService.updateList();
           },
