@@ -37,7 +37,7 @@ private authService : AuthService){}
   }
   
   addContact(contactid: number) {
-    const currentUserString : UserProfile | null = this.authService.getCurrentUserInfo();
+    const currentUserString  = this.authService.getCurrentUserInfo();
     if (currentUserString) {
       console.log(currentUserString);
       const currentUser: number = currentUserString.userid;

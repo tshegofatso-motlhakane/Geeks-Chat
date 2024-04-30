@@ -38,6 +38,7 @@ export class ChatListComponent implements OnInit {
     this.fetchContacts();
     this.Users = this.contactService.contacts;
     this.contactService.messageList$.subscribe(newList => {
+    
       this.messagelist = newList;
       this.filteredMessagelist = this.messagelist;
 

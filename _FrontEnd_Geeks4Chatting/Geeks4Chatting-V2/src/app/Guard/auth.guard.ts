@@ -12,8 +12,8 @@ export const authGuard: CanActivateFn = (route, state) => {
   } else {
      // Redirect to dashboard or another page if the user is already logged in
      console.log("no present user");
-    //  const router = inject(Router);
-    //  router.navigate(['/login']);
+     const router = inject(Router);
+     router.navigate(['/login']);
     return false;
   }
 };
